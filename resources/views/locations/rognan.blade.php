@@ -4,17 +4,13 @@
 @section('description', 'Han Sykkeltypen tilbyr solide bruktsykler og sykkelservice i Rognan. Vi henter og leverer sykkelen din etter avtale.')
 
 @section('content')
-<section class="stripe border-b-2 border-ink bg-forest px-5 py-20 text-white lg:px-8 lg:py-28">
-    <div class="mx-auto max-w-7xl">
-        <p class="inline-flex rounded-full border border-white/30 px-4 py-2 text-sm font-bold uppercase tracking-[.14em] text-sun">Rognan · Salten</p>
-        <h1 class="mt-7 max-w-5xl font-display text-5xl uppercase leading-[.95] tracking-[-.045em] sm:text-6xl lg:text-8xl">Sykkelservice og brukte sykler i <span class="text-sun">Rognan</span></h1>
-        <p class="mt-8 max-w-2xl text-xl leading-8 text-white/80">Trenger du sykkelservice eller er på utkikk etter en god brukt sykkel i Rognan? Han Sykkeltypen pusser opp og selger solide bruktsykler, og utfører vedlikehold som gjør sykkelen din klar for veien igjen.</p>
-        <div class="mt-9 flex flex-col gap-3 sm:flex-row">
-            <a href="{{ route('bikes.index') }}" class="rounded-full bg-sun px-7 py-4 text-center font-extrabold text-ink shadow-hard">Se sykler til salgs →</a>
-            <a href="#kontakt" class="rounded-full border-2 border-white px-7 py-4 text-center font-extrabold">Kontakt Han Sykkeltypen</a>
-        </div>
-    </div>
-</section>
+<x-hero
+    badge="Rognan · Salten"
+    :show-service-action="true"
+    description="Trenger du sykkelservice eller er på utkikk etter en god brukt sykkel i Rognan? Han Sykkeltypen pusser opp og selger solide bruktsykler, og utfører vedlikehold som gjør sykkelen din klar for veien igjen."
+>
+    Sykkelservice og brukte sykler i <span class="text-sun">Rognan</span>
+</x-hero>
 
 <section class="grain bg-paper px-5 py-20 lg:px-8">
     <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-2">

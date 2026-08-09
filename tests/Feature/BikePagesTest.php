@@ -12,7 +12,10 @@ class BikePagesTest extends TestCase
 
     public function test_home_page_loads(): void
     {
-        $this->get('/')->assertOk()->assertSee('Solide bruktsykler');
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Solide bruktsykler')
+            ->assertSee(route('service.create'));
     }
 
     public function test_home_page_shows_featured_bike(): void

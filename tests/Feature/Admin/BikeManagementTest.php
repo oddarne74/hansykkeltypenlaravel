@@ -214,6 +214,19 @@ class BikeManagementTest extends TestCase
         $this->assertSame(BikeStatus::SOLD, $bike->refresh()->status);
     }
 
+    public function test_bikes_can_be_filtered_by_featured_status(): void
+    {
+        $featuredBike = $this->makeBike(['slug' => 'bike-featured', 'featured' => true]);
+        $normalBike = $this->makeBike(['slug' => 'bike-normal', 'featured' => false]);
+
+        $this->actingAs(User::factory()->create());
+
+        Livewire::test(ListBikes::class)
+            ->filterTable('featured', true)
+            ->assertCanSeeTableRecords([$featuredBike])
+            ->assertCanNotSeeTableRecords([$normalBike]);
+    }
+
     public function test_a_bike_can_be_deleted(): void
     {
         $bike = $this->makeBike();

@@ -76,6 +76,9 @@ class BikesTable
                 SelectFilter::make('status')
                     ->label('Status')
                     ->options(BikeStatus::options()),
+                TernaryFilter::make('featured')
+                    ->label('Fremhevet')
+                    ->boolean(),
                 TernaryFilter::make('published_at')
                     ->label('Synlighet')
                     ->nullable()

@@ -13,7 +13,8 @@ class HomeController extends Controller
             ->with('images')
             ->where('featured', true)
             ->where('status', BikeStatus::FOR_SALE)
-            ->latest('published_at')
+            ->inRandomOrder()
+            ->limit(5)
             ->get();
 
         return view('home', ['featured' => $featured]);

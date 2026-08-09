@@ -13,9 +13,11 @@
                     <x-bike-card :bike="$bike" />
                 </div>
             @endforeach
-        </div>
-        <div class="mt-8 text-center">
-            <a href="{{ route('bikes.index') }}" class="rounded-full bg-sun px-7 py-4 font-extrabold text-ink shadow-hard">Se alle sykler →</a>
+            <div class="w-full min-w-[300px] max-w-md shrink-0 snap-start">
+                <a href="{{ route('bikes.index') }}" class="flex h-full min-h-[300px] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-ink/30 bg-paper p-6 text-center shadow-hard transition hover:border-ink/60 hover:bg-ink/5">
+                    <span class="font-display text-2xl uppercase">Se alle sykler</span>
+                </a>
+            </div>
         </div>
     </div>
 </section>

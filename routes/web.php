@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\BikeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\LocationController;
@@ -15,3 +16,8 @@ Route::get('/fauske', [LocationController::class, 'fauske'])->name('locations.fa
 Route::get('/rognan', [LocationController::class, 'rognan'])->name('locations.rognan');
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+
+// The admin panel is powered by Filament and lives at /admin.
+Route::redirect('/dashboard', '/admin')->name('dashboard');
+
+require __DIR__.'/settings.php';

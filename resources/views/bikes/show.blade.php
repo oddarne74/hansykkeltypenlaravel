@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.site')
 @section('title',$bike->name.' til salgs | Han Sykkeltypen')
 @section('description',Str::limit($bike->description,150))
 @section('content')<section class="bg-forest px-5 py-14 text-white lg:px-8"><div class="mx-auto max-w-7xl"><a class="font-bold text-sun" href="{{ route('bikes.index') }}">← Alle sykler</a><div class="mt-8 grid gap-10 lg:grid-cols-[1fr_.8fr] lg:items-end"><div><p class="eyebrow text-sun">{{ $bike->type }}</p><h1 class="font-display text-5xl uppercase sm:text-7xl">{{ $bike->name }}</h1><p class="mt-5 max-w-2xl text-lg leading-8 text-white/75">{{ $bike->description }}</p></div><div class="rounded-3xl border-2 border-white/20 p-7"><div class="flex items-center justify-between"><span class="rounded-full bg-sun px-3 py-1 text-xs font-black uppercase text-ink">{{ $bike->status }}</span><strong class="text-3xl">{{ number_format($bike->price,0,',',' ') }} kr</strong></div><p class="mt-5">Str. {{ $bike->size }} · {{ $bike->rider_height }}</p><a class="mt-6 block rounded-full bg-rust px-6 py-4 text-center font-extrabold" href="{{ route('home') }}#kontakt">Jeg er interessert</a></div></div></div></section>

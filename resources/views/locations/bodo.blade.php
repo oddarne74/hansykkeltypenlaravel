@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.site')
 
 @section('title', 'Brukte sykler og sykkelservice i Bodø | Han Sykkeltypen')
 @section('description', 'Han Sykkeltypen tilbyr solide bruktsykler og sykkelservice i Bodø. Vi henter og leverer sykkelen din etter avtale.')

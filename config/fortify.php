@@ -161,7 +161,7 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        // Features::registration(), // Disabled: the admin section is invite-only.
         Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([

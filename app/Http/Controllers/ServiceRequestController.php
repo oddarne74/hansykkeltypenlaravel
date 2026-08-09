@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\Service;
 use App\Enums\ServiceStatus;
 use App\Models\ServiceRequest;
+use App\Models\UnavailableWeek;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -39,6 +40,8 @@ class ServiceRequestController extends Controller
             'website' => 'nullable|max:0',
         ], [
             'message.required' => 'Du må beskrive hva som skal gjøres eller fikses på sykkelen.',
+            'week_start.required' => 'Du må velge en uke for service.',
+            'week_start.in' => 'Den valgte uken er dessverre ikke ledig lenger. Velg en annen uke.',
         ]);
 
         $serviceRequest = ServiceRequest::create([
@@ -80,13 +83,20 @@ class ServiceRequestController extends Controller
             ->map(fn ($date): string => CarbonImmutable::parse($date)->format('Y-m-d'))
             ->all();
 
+        $unavailable = UnavailableWeek::query()
+            ->pluck('week_start')
+            ->map(fn ($date): string => CarbonImmutable::parse($date)->format('Y-m-d'))
+            ->all();
+
+        $blocked = array_unique(array_merge($taken, $unavailable));
+
         $week = CarbonImmutable::now()->startOfWeek()->addWeek();
         $weeks = [];
 
         while (count($weeks) < $count) {
             $key = $week->format('Y-m-d');
 
-            if (! in_array($key, $taken, true)) {
+            if (! in_array($key, $blocked, true)) {
                 $weeks[$key] = sprintf(
                     'Uke %d (%s–%s)',
                     $week->isoWeek(),

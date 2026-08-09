@@ -5,8 +5,10 @@ namespace Tests\Feature;
 use App\Enums\Service;
 use App\Enums\ServiceStatus;
 use App\Filament\Resources\ServiceRequests\Pages\ViewServiceRequest;
+use App\Filament\Resources\UnavailableWeeks\Pages\ListUnavailableWeeks;
 use App\Mail\ServiceStatusUpdated;
 use App\Models\ServiceRequest;
+use App\Models\UnavailableWeek;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Database\Seeders\ServiceRequestSeeder;
@@ -130,6 +132,75 @@ class ServiceRequestTest extends TestCase
         $this->get(route('service.create'))
             ->assertOk()
             ->assertDontSee('value="'.$nextWeekStart.'"', false);
+    }
+
+    public function test_available_weeks_excludes_unavailable_weeks(): void
+    {
+        $nextWeekStart = CarbonImmutable::now()->startOfWeek()->addWeek()->format('Y-m-d');
+
+        UnavailableWeek::create([
+            'week_start' => $nextWeekStart,
+            'reason' => 'Ferie',
+        ]);
+
+        $this->get(route('service.create'))
+            ->assertOk()
+            ->assertDontSee('value="'.$nextWeekStart.'"', false);
+    }
+
+    public function test_submitting_service_request_for_unavailable_week_fails_validation(): void
+    {
+        $nextWeekStart = CarbonImmutable::now()->startOfWeek()->addWeek()->format('Y-m-d');
+
+        UnavailableWeek::create([
+            'week_start' => $nextWeekStart,
+            'reason' => 'Stengt',
+        ]);
+
+        $this->post(route('service.store'), [
+            'service_type' => Service::FULL_SERVICE->value,
+            'name' => 'Ola Nordmann',
+            'email' => 'ola@example.com',
+            'week_start' => $nextWeekStart,
+            'message' => 'Ønsker service i en sperret uke.',
+        ])->assertSessionHasErrors('week_start');
+    }
+
+    public function test_admin_can_manage_unavailable_weeks(): void
+    {
+        $admin = User::factory()->create();
+        $nextWeekStart = CarbonImmutable::now()->startOfWeek()->addWeek()->format('Y-m-d');
+
+        $this->actingAs($admin);
+
+        Livewire::test(ListUnavailableWeeks::class)
+            ->callAction('create', [
+                'week_start' => $nextWeekStart,
+                'reason' => 'Verksted stengt',
+            ]);
+
+        $this->assertDatabaseHas(UnavailableWeek::class, [
+            'week_start' => $nextWeekStart,
+            'reason' => 'Verksted stengt',
+        ]);
+    }
+
+    public function test_submitting_service_request_for_scheduled_week_fails_validation(): void
+    {
+        $nextWeekStart = CarbonImmutable::now()->startOfWeek()->addWeek()->format('Y-m-d');
+
+        ServiceRequest::factory()->create([
+            'week_start' => $nextWeekStart,
+            'status' => ServiceStatus::APPROVED,
+        ]);
+
+        $this->post(route('service.store'), [
+            'service_type' => Service::FULL_SERVICE->value,
+            'name' => 'Ola Nordmann',
+            'email' => 'ola@example.com',
+            'week_start' => $nextWeekStart,
+            'message' => 'Ønsker service i en uke som allerede er opptatt.',
+        ])->assertSessionHasErrors('week_start');
     }
 
     public function test_admin_can_view_and_approve_service_request(): void

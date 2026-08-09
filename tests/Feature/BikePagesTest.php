@@ -15,6 +15,12 @@ class BikePagesTest extends TestCase
         $this->get('/')->assertOk()->assertSee('Solide bruktsykler');
     }
 
+    public function test_home_page_shows_featured_bike(): void
+    {
+        $bike = $this->makeBike(['featured' => true]);
+        $this->get('/')->assertOk()->assertSee($bike->name);
+    }
+
     public function test_published_bike_has_detail_page(): void
     {
         $bike = Bike::create(['name' => 'Testsykkel', 'slug' => 'testsykkel', 'brand' => 'DBS', 'model' => 'Test', 'type' => 'Hybrid', 'price' => 2000, 'size' => 'M', 'description' => 'Test', 'published_at' => now()]);

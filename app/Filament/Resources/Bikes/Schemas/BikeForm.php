@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Bikes\Schemas;
 
 use App\Enums\BikeSize;
+use App\Enums\BikeStatus;
 use App\Enums\BikeType;
 use App\Models\Bike;
 use Filament\Forms\Components\Repeater;
@@ -50,12 +51,8 @@ class BikeForm
                             ->maxValue(1000000),
                         Select::make('status')
                             ->label('Status')
-                            ->options([
-                                'Til salgs' => 'Til salgs',
-                                'Reservert' => 'Reservert',
-                                'Solgt' => 'Solgt',
-                            ])
-                            ->default('Til salgs')
+                            ->options(BikeStatus::options())
+                            ->default(BikeStatus::FOR_SALE)
                             ->required(),
                     ]),
                 Section::make('Spesifikasjoner')

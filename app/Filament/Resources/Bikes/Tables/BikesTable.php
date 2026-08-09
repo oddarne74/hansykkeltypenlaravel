@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Bikes\Tables;
 
 use App\Enums\BikeSize;
+use App\Enums\BikeStatus;
 use App\Enums\BikeType;
 use App\Models\Bike;
 use Filament\Actions\Action;
@@ -43,11 +44,7 @@ class BikesTable
                     ->sortable(),
                 SelectColumn::make('status')
                     ->label('Status')
-                    ->options([
-                        'Til salgs' => 'Til salgs',
-                        'Reservert' => 'Reservert',
-                        'Solgt' => 'Solgt',
-                    ])
+                    ->options(BikeStatus::options())
                     ->selectablePlaceholder(false)
                     ->sortable(),
                 TextColumn::make('published_at')
@@ -78,11 +75,7 @@ class BikesTable
                     ->options(BikeSize::options()),
                 SelectFilter::make('status')
                     ->label('Status')
-                    ->options([
-                        'Til salgs' => 'Til salgs',
-                        'Reservert' => 'Reservert',
-                        'Solgt' => 'Solgt',
-                    ]),
+                    ->options(BikeStatus::options()),
                 TernaryFilter::make('published_at')
                     ->label('Synlighet')
                     ->nullable()

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Enums\BikeStatus;
 use App\Filament\Resources\Bikes\Pages\CreateBike;
 use App\Filament\Resources\Bikes\Pages\EditBike;
 use App\Filament\Resources\Bikes\Pages\ListBikes;
@@ -64,7 +65,7 @@ class BikeManagementTest extends TestCase
             'model' => 'FX 2',
             'type' => 'Hybridsykkel',
             'price' => 4500,
-            'status' => 'Til salgs',
+            'status' => BikeStatus::FOR_SALE->value,
             'size' => 'M',
             'description' => 'En fin hybridsykkel.',
             'workItems' => [
@@ -203,14 +204,14 @@ class BikeManagementTest extends TestCase
 
     public function test_the_status_can_be_changed_from_the_list(): void
     {
-        $bike = $this->makeBike(['status' => 'Til salgs']);
+        $bike = $this->makeBike(['status' => BikeStatus::FOR_SALE]);
 
         $this->actingAs(User::factory()->create());
 
         Livewire::test(ListBikes::class)
-            ->call('updateTableColumnState', 'status', (string) $bike->getKey(), 'Solgt');
+            ->call('updateTableColumnState', 'status', (string) $bike->getKey(), BikeStatus::SOLD->value);
 
-        $this->assertSame('Solgt', $bike->refresh()->status);
+        $this->assertSame(BikeStatus::SOLD, $bike->refresh()->status);
     }
 
     public function test_a_bike_can_be_deleted(): void

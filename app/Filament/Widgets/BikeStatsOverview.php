@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\BikeStatus;
 use App\Models\Bike;
 use App\Models\ContactRequest;
 use Filament\Widgets\StatsOverviewWidget;
@@ -14,7 +15,7 @@ class BikeStatsOverview extends StatsOverviewWidget
         return [
             Stat::make('Sykler totalt', Bike::count()),
             Stat::make('Publisert', Bike::published()->count()),
-            Stat::make('Til salgs', Bike::where('status', 'Til salgs')->count()),
+            Stat::make('Til salgs', Bike::where('status', BikeStatus::FOR_SALE)->count()),
             Stat::make('Nye henvendelser', ContactRequest::whereNull('read_at')->count())
                 ->description(ContactRequest::count().' totalt'),
         ];

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\BikeSize;
+use App\Enums\BikeStatus;
 use App\Enums\BikeType;
 use App\Models\Bike;
 use Faker\Factory as FakerFactory;
@@ -53,7 +54,7 @@ class BikeSeeder extends Seeder
                 'model' => '7200',
                 'type' => 'Hybridsykkel',
                 'price' => 2990,
-                'status' => 'Til salgs',
+                'status' => BikeStatus::FOR_SALE->value,
                 'size' => 'M',
                 'rider_height' => 'ca. 165–178 cm',
                 'wheel_size' => '28 tommer',
@@ -87,7 +88,7 @@ class BikeSeeder extends Seeder
                 'model' => 'Matts 40',
                 'type' => 'Terrengsykkel',
                 'price' => 2490,
-                'status' => 'Til salgs',
+                'status' => BikeStatus::FOR_SALE->value,
                 'size' => 'L',
                 'rider_height' => 'ca. 175–187 cm',
                 'wheel_size' => '26 tommer',
@@ -114,7 +115,7 @@ class BikeSeeder extends Seeder
                 'model' => 'Classic',
                 'type' => 'Bysykkel',
                 'price' => 3490,
-                'status' => 'Reservert',
+                'status' => BikeStatus::RESERVED->value,
                 'size' => 'M/L',
                 'rider_height' => 'ca. 168–183 cm',
                 'wheel_size' => '28 tommer',
@@ -154,7 +155,7 @@ class BikeSeeder extends Seeder
             [$brand, $model] = $faker->randomElement($this->brandModelPool());
             $type = $faker->randomElement($this->typePool());
             $size = $faker->randomElement(array_keys($this->riderHeightBySize()));
-            $status = $faker->randomElement(['Til salgs', 'Til salgs', 'Til salgs', 'Til salgs', 'Reservert', 'Solgt']);
+            $status = $faker->randomElement([BikeStatus::FOR_SALE->value, BikeStatus::FOR_SALE->value, BikeStatus::FOR_SALE->value, BikeStatus::FOR_SALE->value, BikeStatus::RESERVED->value, BikeStatus::SOLD->value]);
             $name = "{$brand} {$model}";
             $slug = Str::slug("{$name}-{$i}");
 

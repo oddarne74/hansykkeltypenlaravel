@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\Service;
 use App\Enums\ServiceStatus;
-use App\Enums\ServiceType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -41,7 +41,7 @@ class ServiceRequest extends Model
     protected function casts(): array
     {
         return [
-            'service_type' => ServiceType::class,
+            'service_type' => Service::class,
             'week_start' => 'date',
             'wants_pickup' => 'boolean',
             'status' => ServiceStatus::class,

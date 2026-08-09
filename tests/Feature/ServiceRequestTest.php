@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Enums\Service;
 use App\Enums\ServiceStatus;
-use App\Enums\ServiceType;
 use App\Filament\Resources\ServiceRequests\Pages\ViewServiceRequest;
 use App\Mail\ServiceStatusUpdated;
 use App\Models\ServiceRequest;
@@ -30,7 +30,45 @@ class ServiceRequestTest extends TestCase
             ->assertSee('Sykkelsjekk')
             ->assertSee('349 kr')
             ->assertSee('Full service')
-            ->assertSee('999 kr');
+            ->assertSee('999 kr')
+            ->assertSee('Grundig Service')
+            ->assertSee('1 299 kr')
+            ->assertSee('Annet')
+            ->assertSee('Etter avtale')
+            ->assertSee('Dersom du ikke ønsker henting, avtaler vi et tidspunkt for levering.');
+    }
+
+    public function test_user_can_submit_service_request_for_grundig_service_and_other(): void
+    {
+        $nextWeekStart = CarbonImmutable::now()->startOfWeek()->addWeek()->format('Y-m-d');
+
+        $response = $this->post(route('service.store'), [
+            'service_type' => Service::OTHER->value,
+            'name' => 'Ola Nordmann',
+            'email' => 'ola@example.com',
+            'week_start' => $nextWeekStart,
+            'message' => 'Trenger hjelp med bytte av felg og tilpassing av eiker.',
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas(ServiceRequest::class, [
+            'email' => 'ola@example.com',
+            'service_type' => Service::OTHER->value,
+            'message' => 'Trenger hjelp med bytte av felg og tilpassing av eiker.',
+        ]);
+    }
+
+    public function test_submitting_service_request_without_message_fails_validation(): void
+    {
+        $nextWeekStart = CarbonImmutable::now()->startOfWeek()->addWeek()->format('Y-m-d');
+
+        $this->post(route('service.store'), [
+            'service_type' => Service::OTHER->value,
+            'name' => 'Ola Nordmann',
+            'email' => 'ola@example.com',
+            'week_start' => $nextWeekStart,
+            'message' => '',
+        ])->assertSessionHasErrors('message');
     }
 
     public function test_user_can_submit_service_request_with_pickup_and_images(): void
@@ -41,7 +79,7 @@ class ServiceRequestTest extends TestCase
         $file = UploadedFile::fake()->create('bike.jpg', 100, 'image/jpeg');
 
         $response = $this->post(route('service.store'), [
-            'service_type' => ServiceType::FULL_SERVICE->value,
+            'service_type' => Service::FULL_SERVICE->value,
             'name' => 'Kari Nordmann',
             'email' => 'kari@example.com',
             'phone' => '98765432',
@@ -57,7 +95,7 @@ class ServiceRequestTest extends TestCase
 
         $request = ServiceRequest::first();
         $this->assertNotNull($request);
-        $this->assertSame(ServiceType::FULL_SERVICE, $request->service_type);
+        $this->assertSame(Service::FULL_SERVICE, $request->service_type);
         $this->assertSame('Kari Nordmann', $request->name);
         $this->assertSame('kari@example.com', $request->email);
         $this->assertTrue($request->wants_pickup);

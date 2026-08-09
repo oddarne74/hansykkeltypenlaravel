@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Service;
 use App\Enums\ServiceStatus;
-use App\Enums\ServiceType;
 use App\Models\ServiceRequest;
 use Carbon\CarbonImmutable;
 use Faker\Factory as FakerFactory;
@@ -43,7 +43,7 @@ class ServiceRequestSeeder extends Seeder
 
         $messages = $this->messagePool();
         $addresses = $this->addressPool();
-        $serviceTypes = ServiceType::cases();
+        $serviceTypes = Service::cases();
 
         // 25 weeks range: from -12 weeks ago to +12 weeks in future
         $startOfWeek = CarbonImmutable::now()->startOfWeek();

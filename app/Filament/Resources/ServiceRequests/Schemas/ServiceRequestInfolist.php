@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\ServiceRequests\Schemas;
 
+use App\Enums\Service;
 use App\Enums\ServiceStatus;
-use App\Enums\ServiceType;
 use App\Models\ServiceRequest;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -34,7 +34,7 @@ class ServiceRequestInfolist
                             ->label('Valgt service')
                             ->badge()
                             ->color('info')
-                            ->formatStateUsing(fn (ServiceType|string|null $state): string => $state instanceof ServiceType ? $state->labelWithPrice() : (string) $state),
+                            ->formatStateUsing(fn (Service|string|null $state): string => $state instanceof Service ? $state->labelWithPrice() : (string) $state),
                         TextEntry::make('status')
                             ->label('Status')
                             ->badge()

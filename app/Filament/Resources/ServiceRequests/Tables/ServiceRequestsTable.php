@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\ServiceRequests\Tables;
 
+use App\Enums\Service;
 use App\Enums\ServiceStatus;
-use App\Enums\ServiceType;
 use App\Mail\ServiceStatusUpdated;
 use App\Models\ServiceRequest;
 use Filament\Actions\Action;
@@ -40,7 +40,7 @@ class ServiceRequestsTable
                     ->label('Tjeneste')
                     ->badge()
                     ->color('info')
-                    ->formatStateUsing(fn (ServiceType|string|null $state): string => $state instanceof ServiceType ? $state->labelWithPrice() : (string) $state),
+                    ->formatStateUsing(fn (Service|string|null $state): string => $state instanceof Service ? $state->labelWithPrice() : (string) $state),
                 TextColumn::make('week_start')
                     ->label('Uke')
                     ->state(fn (ServiceRequest $record): string => $record->week_start ? sprintf('Uke %d (%s)', Carbon::parse($record->week_start)->isoWeek(), Carbon::parse($record->week_start)->format('d.m.Y')) : '-')
@@ -63,7 +63,7 @@ class ServiceRequestsTable
                     ->options(ServiceStatus::options()),
                 SelectFilter::make('service_type')
                     ->label('Tjeneste')
-                    ->options(ServiceType::options()),
+                    ->options(Service::options()),
             ])
             ->recordActions([
                 ViewAction::make(),

@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\Service;
 use App\Enums\ServiceStatus;
-use App\Enums\ServiceType;
 use App\Models\ServiceRequest;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -18,7 +18,7 @@ class ServiceRequestFactory extends Factory
     public function definition(): array
     {
         return [
-            'service_type' => $this->faker->randomElement(ServiceType::cases()),
+            'service_type' => $this->faker->randomElement(Service::cases()),
             'name' => $this->faker->name(),
             'email' => $this->faker->safeEmail(),
             'phone' => $this->faker->phoneNumber(),

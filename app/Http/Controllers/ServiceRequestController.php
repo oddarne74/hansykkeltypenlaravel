@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Service;
 use App\Enums\ServiceStatus;
-use App\Enums\ServiceType;
 use App\Models\ServiceRequest;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
@@ -15,7 +15,7 @@ class ServiceRequestController extends Controller
     {
         return view('service.create', [
             'weeks' => $this->availableWeeks(),
-            'serviceTypes' => ServiceType::cases(),
+            'serviceTypes' => Service::cases(),
         ]);
     }
 
@@ -26,7 +26,7 @@ class ServiceRequestController extends Controller
         $request->merge(['wants_pickup' => $request->boolean('wants_pickup')]);
 
         $data = $request->validate([
-            'service_type' => ['required', Rule::enum(ServiceType::class)],
+            'service_type' => ['required', Rule::enum(Service::class)],
             'name' => 'required|string|max:100',
             'email' => 'required|email|max:190',
             'phone' => 'nullable|string|max:40',
@@ -37,6 +37,8 @@ class ServiceRequestController extends Controller
             'images' => 'nullable|array|max:6',
             'images.*' => 'image|max:5120',
             'website' => 'nullable|max:0',
+        ], [
+            'message.required' => 'Du må beskrive hva som skal gjøres eller fikses på sykkelen.',
         ]);
 
         $serviceRequest = ServiceRequest::create([

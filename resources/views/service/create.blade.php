@@ -20,7 +20,7 @@
             <p class="lead">Send inn forespørselen din, så tar vi kontakt. Du får en e-post når forespørselen er godkjent eller avslått.</p>
             <div class="mt-8 space-y-4">
                 <h3 class="text-xl font-bold">Våre servicetjenester</h3>
-                @foreach(\App\Enums\ServiceType::cases() as $type)
+                @foreach(\App\Enums\Service::cases() as $type)
                     <article class="card">
                         <div class="flex items-baseline justify-between gap-2">
                             <h4 class="font-bold text-lg">{{ $type->value }}</h4>
@@ -43,7 +43,7 @@
             <label>Velg service
                 <select name="service_type" required>
                     <option value="">Velg service</option>
-                    @foreach(\App\Enums\ServiceType::cases() as $type)
+                    @foreach(\App\Enums\Service::cases() as $type)
                         <option value="{{ $type->value }}" @selected(old('service_type') === $type->value)>
                             {{ $type->labelWithPrice() }}
                         </option>
@@ -60,18 +60,21 @@
                 </select>
             </label>
 
-            <label>Hva skal gjøres?<textarea name="message" rows="6" required>{{ old('message') }}</textarea></label>
+            <label>Hva skal gjøres?<small class="block text-ink/60 font-normal">Beskriv hva som skal utføres eller fikses på sykkelen (påkrevd for "Annet").</small><textarea name="message" rows="6" required>{{ old('message') }}</textarea></label>
 
-            <label class="flex items-start gap-3">
-                <input type="checkbox" name="wants_pickup" value="1" class="mt-1 size-5" @checked(old('wants_pickup'))>
-                <span>Jeg ønsker henting og levering av sykkelen (etter avtale).</span>
-            </label>
+            <div class="space-y-1">
+                <label class="flex items-start gap-3">
+                    <input type="checkbox" name="wants_pickup" value="1" class="mt-1 size-5" @checked(old('wants_pickup'))>
+                    <span>Jeg ønsker henting og levering av sykkelen (etter avtale).</span>
+                </label>
+                <small class="block pl-8 text-ink/60 font-normal">Dersom du ikke ønsker henting, avtaler vi et tidspunkt for levering.</small>
+            </div>
 
             <label>Adresse for henting (hvis aktuelt)<input name="address" value="{{ old('address') }}"></label>
 
             <label>Bilder av sykkelen (valgfritt)
                 <input type="file" name="images[]" accept="image/*" multiple>
-                <small class="text-ink/60">Opptil 6 bilder, maks 5 MB per bilde.</small>
+                <small class="text-ink/60">Legg gjerne ved bilder (opptil 6 bilder, maks 5 MB per bilde).</small>
             </label>
 
             @if($errors->any())

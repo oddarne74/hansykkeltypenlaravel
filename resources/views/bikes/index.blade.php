@@ -14,14 +14,6 @@
 <section class="grain min-h-[50vh] px-5 py-16 lg:px-8">
     <div class="mx-auto max-w-7xl">
         <form method="get" action="{{ route('bikes.index') }}" class="card mb-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            <label>Status
-                <select name="status">
-                    <option value="">Alle</option>
-                    @foreach($filterOptions['statuses'] as $status)
-                        <option value="{{ $status }}" @selected(($filters['status'] ?? null) === $status)>{{ $status }}</option>
-                    @endforeach
-                </select>
-            </label>
             <label>Merke
                 <select name="brand">
                     <option value="">Alle</option>

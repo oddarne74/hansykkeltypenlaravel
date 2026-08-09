@@ -50,17 +50,6 @@ class BikePagesTest extends TestCase
         ], $overrides));
     }
 
-    public function test_bikes_can_be_filtered_by_status(): void
-    {
-        $forSale = $this->makeBike(['status' => 'Til salgs']);
-        $sold = $this->makeBike(['name' => 'Giant Escape', 'slug' => 'giant-escape', 'brand' => 'Giant', 'status' => 'Solgt']);
-
-        $this->get(route('bikes.index', ['status' => 'Solgt']))
-            ->assertOk()
-            ->assertSee($sold->name)
-            ->assertDontSee($forSale->name);
-    }
-
     public function test_bikes_can_be_filtered_by_brand(): void
     {
         $trek = $this->makeBike();

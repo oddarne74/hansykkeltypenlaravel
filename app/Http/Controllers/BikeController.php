@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BikeStatus;
 use App\Models\Bike;
 use Illuminate\Http\Request;
 
@@ -20,7 +21,7 @@ class BikeController extends Controller
 
         $bikes = Bike::published()
             ->with('images')
-            ->when($filters['status'] ?? null, fn ($query, $status) => $query->where('status', $status))
+            ->whereIn('status', [BikeStatus::FOR_SALE->value, BikeStatus::RESERVED->value])
             ->when($filters['brand'] ?? null, fn ($query, $brand) => $query->where('brand', $brand))
             ->when($filters['size'] ?? null, fn ($query, $size) => $query->where('size', $size))
             ->when($filters['gears'] ?? null, fn ($query, $gears) => $query->where('gears', $gears))
@@ -34,7 +35,6 @@ class BikeController extends Controller
             'bikes' => $bikes,
             'filters' => $filters,
             'filterOptions' => [
-                'statuses' => Bike::published()->distinct()->orderBy('status')->pluck('status'),
                 'brands' => Bike::published()->distinct()->orderBy('brand')->pluck('brand'),
                 'sizes' => Bike::published()->whereNotNull('size')->distinct()->orderBy('size')->pluck('size'),
                 'gears' => Bike::published()->whereNotNull('gears')->distinct()->orderBy('gears')->pluck('gears'),

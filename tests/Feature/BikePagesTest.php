@@ -1,0 +1,4 @@
+<?php
+namespace Tests\Feature;
+use App\Models\Bike; use Illuminate\Foundation\Testing\RefreshDatabase; use Tests\TestCase;
+class BikePagesTest extends TestCase { use RefreshDatabase; public function test_home_page_loads():void{$this->get('/')->assertOk()->assertSee('Solide bruktsykler');} public function test_published_bike_has_detail_page():void{$bike=Bike::create(['name'=>'Testsykkel','slug'=>'testsykkel','brand'=>'DBS','model'=>'Test','type'=>'Hybrid','price'=>2000,'size'=>'M','description'=>'Test','published_at'=>now()]);$this->get(route('bikes.show',$bike))->assertOk()->assertSee('Testsykkel');} public function test_contact_requires_consent():void{$this->post('/kontakt',['name'=>'Ola','contact'=>'ola@example.no','subject'=>'bike','message'=>'Hei'])->assertSessionHasErrors('consent');} }

@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../views/**/*.blade.php';
+@theme { --color-ink:#19302b; --color-forest:#173f35; --color-moss:#47695b; --color-cream:#f5f0e4; --color-paper:#fffdf7; --color-rust:#db5f35; --color-sun:#e9b949; --font-display:'Arial Black',Arial,sans-serif; --shadow-hard:6px 6px 0 #19302b; }
+html{scroll-behavior:smooth}body{background:#f5f0e4}::selection{background:#e9b949;color:#19302b}.grain{background-image:radial-gradient(rgb(25 48 43/.12) .7px,transparent .7px);background-size:7px 7px}.stripe{background-image:repeating-linear-gradient(-45deg,transparent,transparent 8px,rgb(255 255 255/.06) 8px,rgb(255 255 255/.06) 16px)}.focus-ring:focus-visible,a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #e9b949;outline-offset:3px}
+@layer components { h2{@apply mt-3 font-display text-4xl uppercase leading-none sm:text-5xl} h3{@apply font-display text-xl uppercase} .eyebrow{@apply font-bold uppercase tracking-[.18em] text-rust} .lead{@apply mt-6 text-lg leading-8 text-ink/75} .card{@apply rounded-3xl border-2 border-ink bg-paper p-7 shadow-hard} .button{@apply mt-6 inline-block rounded-full bg-rust px-7 py-4 font-extrabold text-white} label{@apply block font-bold} input:not([type=checkbox]),select,textarea{@apply mt-2 w-full rounded-xl border-2 border-ink bg-white px-4 py-3 font-normal} }
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

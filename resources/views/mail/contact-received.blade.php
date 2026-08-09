@@ -1,0 +1,1 @@
+<h1>Ny henvendelse</h1><p><strong>Navn:</strong> {{ $request->name }}</p><p><strong>Kontakt:</strong> {{ $request->contact }}</p><p><strong>Gjelder:</strong> {{ $request->subject }}</p><p>{!! nl2br(e($request->message)) !!}</p>

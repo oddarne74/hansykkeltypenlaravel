@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use App\Enums\BikeStatus;
+use App\Mail\BikeAvailable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class Bike extends Model
@@ -21,6 +23,16 @@ class Bike extends Model
             foreach ($bike->images as $image) {
                 Storage::disk('public')->delete($image->path);
             }
+
+        });
+
+        static::updated(function (Bike $bike) {
+             if ($bike->wasChanged('status') && $bike->status === BikeStatus::FOR_SALE && $bike->getOriginal('status') === BikeStatus::RESERVED) {
+                 foreach ($bike->interests as $interest) {
+                     Mail::to($interest->email)->queue(new BikeAvailable($bike));
+                     $interest->delete();
+                 }
+             }
         });
     }
 
@@ -33,6 +45,12 @@ class Bike extends Model
     public function images()
     {
         return $this->hasMany(BikeImage::class)->orderBy('sort_order');
+    }
+
+    /** @return HasMany<BikeInterest, $this> */
+    public function interests()
+    {
+        return $this->hasMany(BikeInterest::class);
     }
 
     /** @return HasMany<BikeWorkItem, $this> */

@@ -1,0 +1,101 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Enums\ServiceStatus;
+use App\Enums\ServiceType;
+use App\Models\ServiceRequest;
+use Carbon\CarbonImmutable;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+
+class ServiceRequestController extends Controller
+{
+    public function create()
+    {
+        return view('service.create', [
+            'weeks' => $this->availableWeeks(),
+            'serviceTypes' => ServiceType::cases(),
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $weeks = $this->availableWeeks();
+
+        $request->merge(['wants_pickup' => $request->boolean('wants_pickup')]);
+
+        $data = $request->validate([
+            'service_type' => ['required', Rule::enum(ServiceType::class)],
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|max:190',
+            'phone' => 'nullable|string|max:40',
+            'message' => 'required|string|max:4000',
+            'week_start' => ['required', 'date', Rule::in(array_keys($weeks))],
+            'wants_pickup' => 'boolean',
+            'address' => 'nullable|required_if:wants_pickup,true|string|max:190',
+            'images' => 'nullable|array|max:6',
+            'images.*' => 'image|max:5120',
+            'website' => 'nullable|max:0',
+        ]);
+
+        $serviceRequest = ServiceRequest::create([
+            'service_type' => $data['service_type'],
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'] ?? null,
+            'message' => $data['message'],
+            'week_start' => $data['week_start'],
+            'wants_pickup' => $data['wants_pickup'],
+            'address' => $data['wants_pickup'] ? ($data['address'] ?? null) : null,
+            'status' => ServiceStatus::PENDING,
+        ]);
+
+        if ($request->hasFile('images')) {
+            $paths = [];
+
+            foreach ($request->file('images') as $image) {
+                $paths[] = $image->store('service-requests/'.$serviceRequest->id, 'public');
+            }
+
+            $serviceRequest->update(['images' => $paths]);
+        }
+
+        return back()->with('status', 'Takk! Vi har mottatt serviceforespørselen din og gir deg beskjed så snart den er behandlet.');
+    }
+
+    /**
+     * Upcoming bookable weeks (one bike accepted per week), keyed by the
+     * Monday date (Y-m-d) with a human-readable Norwegian label.
+     *
+     * @return array<string, string>
+     */
+    private function availableWeeks(int $count = 12): array
+    {
+        $taken = ServiceRequest::query()
+            ->where('status', ServiceStatus::APPROVED)
+            ->pluck('week_start')
+            ->map(fn ($date): string => CarbonImmutable::parse($date)->format('Y-m-d'))
+            ->all();
+
+        $week = CarbonImmutable::now()->startOfWeek()->addWeek();
+        $weeks = [];
+
+        while (count($weeks) < $count) {
+            $key = $week->format('Y-m-d');
+
+            if (! in_array($key, $taken, true)) {
+                $weeks[$key] = sprintf(
+                    'Uke %d (%s–%s)',
+                    $week->isoWeek(),
+                    $week->format('d.m'),
+                    $week->endOfWeek()->format('d.m'),
+                );
+            }
+
+            $week = $week->addWeek();
+        }
+
+        return $weeks;
+    }
+}

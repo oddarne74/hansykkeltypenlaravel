@@ -27,12 +27,12 @@ class Bike extends Model
         });
 
         static::updated(function (Bike $bike) {
-             if ($bike->wasChanged('status') && $bike->status === BikeStatus::FOR_SALE && $bike->getOriginal('status') === BikeStatus::RESERVED) {
-                 foreach ($bike->interests as $interest) {
-                     Mail::to($interest->email)->queue(new BikeAvailable($bike));
-                     $interest->delete();
-                 }
-             }
+            if ($bike->wasChanged('status') && $bike->status === BikeStatus::FOR_SALE && $bike->getOriginal('status') === BikeStatus::RESERVED) {
+                foreach ($bike->interests as $interest) {
+                    Mail::to($interest->email)->queue(new BikeAvailable($bike));
+                    $interest->delete();
+                }
+            }
         });
     }
 

@@ -23,7 +23,6 @@ class Bike extends Model
             foreach ($bike->images as $image) {
                 Storage::disk('public')->delete($image->path);
             }
-
         });
 
         static::updated(function (Bike $bike) {

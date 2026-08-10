@@ -1,0 +1,21 @@
+{
+    "name": "hansykkeltypen/web-stats",
+    "description": "Simple web stats package containing page title, URL, views per day, week, month, and admin interface.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "WebStats\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "WebStats\\WebStatsServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.5"
+    }
+}

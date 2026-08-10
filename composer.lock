@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "98576e8b87ae0c18d0a93ce9a07d71b8",
+    "content-hash": "c713436c887db4be45cca447e1a3f53f",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -2180,6 +2180,38 @@
             "time": "2026-07-17T13:53:03+00:00"
         },
         {
+            "name": "hansykkeltypen/web-stats",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/web-stats",
+                "reference": "2ad0214edb58331ea66ea57ddf036a24d3caabd7"
+            },
+            "require": {
+                "php": "^8.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "WebStats\\WebStatsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "WebStats\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Simple web stats package containing page title, URL, views per day, week, month, and admin interface.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "kirschbaum-development/eloquent-power-joins",
             "version": "4.3.3",
             "source": {
@@ -2792,16 +2824,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "2.9.0",
+            "version": "2.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "5703d83ba3da3b2e356a5fedc848ed6d8ffb6529"
+                "reference": "73cb188c785abfa7a7bec73487148202968274c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/5703d83ba3da3b2e356a5fedc848ed6d8ffb6529",
-                "reference": "5703d83ba3da3b2e356a5fedc848ed6d8ffb6529",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/73cb188c785abfa7a7bec73487148202968274c6",
+                "reference": "73cb188c785abfa7a7bec73487148202968274c6",
                 "shasum": ""
             },
             "require": {
@@ -2895,7 +2927,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-03T13:42:31+00:00"
+            "time": "2026-08-09T14:10:38+00:00"
         },
         {
             "name": "league/config",
@@ -3584,16 +3616,16 @@
         },
         {
             "name": "livewire/flux",
-            "version": "v2.15.1",
+            "version": "v2.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/flux.git",
-                "reference": "4b194b1ebe971c76d27a33099643ab62af87593b"
+                "reference": "b7e993d567dd7ffdcba42dcc7cdcb2163183b7f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/flux/zipball/4b194b1ebe971c76d27a33099643ab62af87593b",
-                "reference": "4b194b1ebe971c76d27a33099643ab62af87593b",
+                "url": "https://api.github.com/repos/livewire/flux/zipball/b7e993d567dd7ffdcba42dcc7cdcb2163183b7f8",
+                "reference": "b7e993d567dd7ffdcba42dcc7cdcb2163183b7f8",
                 "shasum": ""
             },
             "require": {
@@ -3644,22 +3676,22 @@
             ],
             "support": {
                 "issues": "https://github.com/livewire/flux/issues",
-                "source": "https://github.com/livewire/flux/tree/v2.15.1"
+                "source": "https://github.com/livewire/flux/tree/v2.16.0"
             },
-            "time": "2026-08-06T12:04:36+00:00"
+            "time": "2026-08-09T17:23:35+00:00"
         },
         {
             "name": "livewire/livewire",
-            "version": "v4.3.5",
+            "version": "v4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "7ef4b2a876c71744e86463079dd506b26eeab624"
+                "reference": "514b29d5a23594d4e4846494f580268b20c2f11e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/7ef4b2a876c71744e86463079dd506b26eeab624",
-                "reference": "7ef4b2a876c71744e86463079dd506b26eeab624",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/514b29d5a23594d4e4846494f580268b20c2f11e",
+                "reference": "514b29d5a23594d4e4846494f580268b20c2f11e",
                 "shasum": ""
             },
             "require": {
@@ -3714,7 +3746,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v4.3.5"
+                "source": "https://github.com/livewire/livewire/tree/v4.4.0"
             },
             "funding": [
                 {
@@ -3722,7 +3754,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-03T04:09:44+00:00"
+            "time": "2026-08-10T15:24:22+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -10179,16 +10211,16 @@
         },
         {
             "name": "laravel/pint",
-            "version": "v1.30.4",
+            "version": "v1.30.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/pint.git",
-                "reference": "a96cb6eee2961905d2fce7207aefb80945bf6b28"
+                "reference": "fe4148c503a0e266353d61396b79bbf7f35122df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/pint/zipball/a96cb6eee2961905d2fce7207aefb80945bf6b28",
-                "reference": "a96cb6eee2961905d2fce7207aefb80945bf6b28",
+                "url": "https://api.github.com/repos/laravel/pint/zipball/fe4148c503a0e266353d61396b79bbf7f35122df",
+                "reference": "fe4148c503a0e266353d61396b79bbf7f35122df",
                 "shasum": ""
             },
             "require": {
@@ -10196,19 +10228,19 @@
                 "ext-mbstring": "*",
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
-                "php": "^8.2.0"
+                "php": "^8.3.0"
             },
             "require-dev": {
                 "composer/semver": "^3.4.4",
                 "friendsofphp/php-cs-fixer": "^3.95.18",
-                "illuminate/view": "^12.65.0",
+                "illuminate/view": "^13.24.0",
                 "larastan/larastan": "^3.10.0",
-                "laravel-zero/framework": "^12.1.0",
+                "laravel-zero/framework": "^13.0.0",
                 "laravel/agent-detector": "^2.0.2",
                 "laravel/prompts": "^0.3.22",
                 "mockery/mockery": "^1.6.12",
                 "nunomaduro/termwind": "^2.4.0",
-                "pestphp/pest": "^3.8.7"
+                "pestphp/pest": "^4.7.8"
             },
             "bin": [
                 "builds/pint"
@@ -10245,7 +10277,7 @@
                 "issues": "https://github.com/laravel/pint/issues",
                 "source": "https://github.com/laravel/pint"
             },
-            "time": "2026-08-05T16:47:22+00:00"
+            "time": "2026-08-10T15:35:50+00:00"
         },
         {
             "name": "laravel/roster",
@@ -12318,7 +12350,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "hansykkeltypen/web-stats": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

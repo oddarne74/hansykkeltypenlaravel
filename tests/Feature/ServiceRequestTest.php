@@ -12,6 +12,7 @@ use App\Models\UnavailableWeek;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Database\Seeders\ServiceRequestSeeder;
+use Database\Seeders\UnavailableWeekSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
@@ -28,16 +29,42 @@ class ServiceRequestTest extends TestCase
         $this->get(route('service.create'))
             ->assertOk()
             ->assertSee('Bestill service')
-            ->assertSee('Én sykkel per uke')
+            ->assertSee('én sykkel per uke')
             ->assertSee('Sykkelsjekk')
             ->assertSee('349 kr')
-            ->assertSee('Full service')
-            ->assertSee('999 kr')
+            ->assertSee('Enkel service')
+            ->assertSee('649 kr')
             ->assertSee('Grundig Service')
             ->assertSee('1 299 kr')
             ->assertSee('Annet')
             ->assertSee('Etter avtale')
             ->assertSee('Dersom du ikke ønsker henting, avtaler vi et tidspunkt for levering.');
+    }
+
+    public function test_service_booking_page_defaults_to_enkel_service_when_no_service_selected(): void
+    {
+        $response = $this->get(route('service.create'));
+
+        $response->assertOk()
+            ->assertSee('<option value="Enkel service" selected>', false);
+    }
+
+    public function test_service_booking_page_prepopulates_selected_service_from_query(): void
+    {
+        $response = $this->get(route('service.create', ['service' => 'Grundig Service']));
+
+        $response->assertOk()
+            ->assertSee('<option value="Grundig Service" selected>', false);
+    }
+
+    public function test_service_booking_page_prepopulates_first_available_week(): void
+    {
+        $firstAvailableWeek = CarbonImmutable::now()->startOfWeek()->addWeek()->format('Y-m-d');
+
+        $response = $this->get(route('service.create'));
+
+        $response->assertOk()
+            ->assertSee('<option value="'.$firstAvailableWeek.'" selected>', false);
     }
 
     public function test_user_can_submit_service_request_for_grundig_service_and_other(): void
@@ -81,7 +108,7 @@ class ServiceRequestTest extends TestCase
         $file = UploadedFile::fake()->create('bike.jpg', 100, 'image/jpeg');
 
         $response = $this->post(route('service.store'), [
-            'service_type' => Service::FULL_SERVICE->value,
+            'service_type' => Service::GRUNDIG_SERVICE->value,
             'name' => 'Kari Nordmann',
             'email' => 'kari@example.com',
             'phone' => '98765432',
@@ -97,7 +124,7 @@ class ServiceRequestTest extends TestCase
 
         $request = ServiceRequest::first();
         $this->assertNotNull($request);
-        $this->assertSame(Service::FULL_SERVICE, $request->service_type);
+        $this->assertSame(Service::GRUNDIG_SERVICE, $request->service_type);
         $this->assertSame('Kari Nordmann', $request->name);
         $this->assertSame('kari@example.com', $request->email);
         $this->assertTrue($request->wants_pickup);
@@ -158,7 +185,7 @@ class ServiceRequestTest extends TestCase
         ]);
 
         $this->post(route('service.store'), [
-            'service_type' => Service::FULL_SERVICE->value,
+            'service_type' => Service::GRUNDIG_SERVICE->value,
             'name' => 'Ola Nordmann',
             'email' => 'ola@example.com',
             'week_start' => $nextWeekStart,
@@ -195,7 +222,7 @@ class ServiceRequestTest extends TestCase
         ]);
 
         $this->post(route('service.store'), [
-            'service_type' => Service::FULL_SERVICE->value,
+            'service_type' => Service::GRUNDIG_SERVICE->value,
             'name' => 'Ola Nordmann',
             'email' => 'ola@example.com',
             'week_start' => $nextWeekStart,
@@ -257,5 +284,17 @@ class ServiceRequestTest extends TestCase
         $this->seed(ServiceRequestSeeder::class);
 
         $this->assertDatabaseCount(ServiceRequest::class, 50);
+    }
+
+    public function test_unavailable_week_seeder_seeds_3_weeks(): void
+    {
+        $this->seed(UnavailableWeekSeeder::class);
+
+        $this->assertDatabaseCount(UnavailableWeek::class, 3);
+
+        // Seeding again should be idempotent
+        $this->seed(UnavailableWeekSeeder::class);
+
+        $this->assertDatabaseCount(UnavailableWeek::class, 3);
     }
 }

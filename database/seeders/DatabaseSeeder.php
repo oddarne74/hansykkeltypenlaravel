@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             BikeSeeder::class,
             ContactRequestSeeder::class,
             ServiceRequestSeeder::class,
+            UnavailableWeekSeeder::class,
         ]);
     }
 }

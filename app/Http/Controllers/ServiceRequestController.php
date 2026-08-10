@@ -12,11 +12,32 @@ use Illuminate\Validation\Rule;
 
 class ServiceRequestController extends Controller
 {
-    public function create()
+    public function create(Request $request)
     {
+        $serviceParam = $request->query('service') ?? $request->query('service_type');
+        $selectedService = null;
+
+        if (is_string($serviceParam)) {
+            $selectedService = Service::tryFrom($serviceParam)?->value;
+
+            if (! $selectedService) {
+                foreach (Service::cases() as $case) {
+                    if (strcasecmp($case->name, $serviceParam) === 0 || strcasecmp($case->value, $serviceParam) === 0) {
+                        $selectedService = $case->value;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (! $selectedService) {
+            $selectedService = Service::ENKEL_SERVICE->value;
+        }
+
         return view('service.create', [
             'weeks' => $this->availableWeeks(),
             'serviceTypes' => Service::cases(),
+            'selectedService' => $selectedService,
         ]);
     }
 

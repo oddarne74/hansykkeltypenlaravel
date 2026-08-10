@@ -25,7 +25,7 @@
                             <input type="email" name="email" required placeholder="Din e-post" class="w-full rounded-full border-2 border-white/20 bg-transparent px-4 py-3 placeholder:text-white/50">
                             <button type="submit" class="mt-3 block w-full rounded-full bg-sun px-6 py-4 text-center font-extrabold text-ink">Meld interesse</button>
                         </form>
-                    @else
+                    @elseif($bike->status === \App\Enums\BikeStatus::FOR_SALE)
                         <a class="mt-6 block rounded-full bg-rust px-6 py-4 text-center font-extrabold" href="{{ route('home') }}#kontakt">Jeg er interessert</a>
                     @endif
                 </div>

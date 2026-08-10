@@ -8,7 +8,7 @@
     <div class="mx-auto max-w-7xl">
         <p class="inline-flex rounded-full border border-white/30 px-4 py-2 text-sm font-bold uppercase tracking-[.14em] text-sun">Sykkelservice</p>
         <h1 class="mt-7 max-w-5xl font-display text-5xl uppercase leading-[.95] tracking-[-.045em] sm:text-6xl lg:text-8xl">Bestill service <span class="text-sun">på sykkelen din</span></h1>
-        <p class="mt-8 max-w-2xl text-xl leading-8 text-white/80">Vi tar imot én sykkel til service per uke for å gi hver sykkel den tiden den fortjener. Velg ønsket uke, beskriv hva som må gjøres, og last gjerne opp bilder av sykkelen.</p>
+        <p class="mt-8 max-w-2xl text-xl leading-8 text-white/80">Velg ønsket uke, beskriv hva som må gjøres, og last gjerne opp bilder av sykkelen hvis du ønsker noe utenfor normalen.</p>
     </div>
 </section>
 
@@ -16,10 +16,9 @@
     <div class="mx-auto grid max-w-5xl gap-10 lg:grid-cols-[.8fr_1fr]">
         <div>
             <p class="eyebrow">Slik fungerer det</p>
-            <h2>Én sykkel per uke</h2>
             <p class="lead">Send inn forespørselen din, så tar vi kontakt. Du får en e-post når forespørselen er godkjent eller avslått.</p>
             <div class="mt-8 space-y-4">
-                <h3 class="text-xl font-bold">Våre servicetjenester</h3>
+                <h3 class="text-xl font-bold">Tjenester</h3>
                 @foreach(\App\Enums\Service::cases() as $type)
                     <article class="card">
                         <div class="flex items-baseline justify-between gap-2">
@@ -44,7 +43,7 @@
                 <select name="service_type" required>
                     <option value="">Velg service</option>
                     @foreach(\App\Enums\Service::cases() as $type)
-                        <option value="{{ $type->value }}" @selected(old('service_type') === $type->value)>
+                        <option value="{{ $type->value }}" @selected(old('service_type', $selectedService ?? null) === $type->value)>
                             {{ $type->labelWithPrice() }}
                         </option>
                     @endforeach
@@ -55,7 +54,7 @@
                 <select name="week_start" required>
                     <option value="">Velg uke</option>
                     @foreach($weeks as $value => $label)
-                        <option value="{{ $value }}" @selected(old('week_start') === $value)>{{ $label }}</option>
+                        <option value="{{ $value }}" @selected(old('week_start', array_key_first($weeks)) === $value)>{{ $label }}</option>
                     @endforeach
                 </select>
             </label>

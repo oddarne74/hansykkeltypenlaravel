@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\BikeStatus;
 use App\Models\Bike;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -100,5 +101,33 @@ class BikePagesTest extends TestCase
             ->assertOk()
             ->assertSee($matching->name)
             ->assertDontSee($other->name);
+    }
+
+    public function test_bike_page_shows_interested_button_when_for_sale(): void
+    {
+        $bike = $this->makeBike(['status' => BikeStatus::FOR_SALE]);
+
+        $this->get(route('bikes.show', $bike))
+            ->assertOk()
+            ->assertSee('Jeg er interessert');
+    }
+
+    public function test_bike_page_shows_meld_interesse_form_when_reserved(): void
+    {
+        $bike = $this->makeBike(['status' => BikeStatus::RESERVED]);
+
+        $this->get(route('bikes.show', $bike))
+            ->assertOk()
+            ->assertSee('Meld interesse');
+    }
+
+    public function test_bike_page_does_not_show_interested_button_when_sold(): void
+    {
+        $bike = $this->makeBike(['status' => BikeStatus::SOLD]);
+
+        $this->get(route('bikes.show', $bike))
+            ->assertOk()
+            ->assertDontSee('Jeg er interessert')
+            ->assertDontSee('Meld interesse');
     }
 }

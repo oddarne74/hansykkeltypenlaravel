@@ -16,7 +16,19 @@ class BikePagesTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertSee('Solide bruktsykler')
-            ->assertSee(route('service.create'));
+            ->assertSee(route('service.create'))
+            ->assertDontSee('Se sykler til salgs')
+            ->assertDontSee(route('bikes.index'));
+    }
+
+    public function test_home_page_shows_bikes_link_when_bikes_are_for_sale(): void
+    {
+        $this->makeBike();
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Se sykler til salgs')
+            ->assertSee(route('bikes.index'));
     }
 
     public function test_home_page_shows_featured_bike(): void

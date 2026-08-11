@@ -12,7 +12,8 @@
 ])
 
 @php
-    $primaryActionUrl = $primaryActionUrl ?? route('bikes.index');
+    $hasBikesForSale = $hasBikesForSale ?? true;
+    $primaryActionUrl = $primaryActionUrl ?? ($hasBikesForSale ? route('bikes.index') : null);
     $serviceActionUrl = $serviceActionUrl ?? route('service.create');
 @endphp
 
@@ -26,7 +27,9 @@
             <p class="mt-8 max-w-2xl text-xl leading-8 text-white/80">{{ $description }}</p>
         @endif
         <div class="mt-9 flex flex-col gap-3 sm:flex-row">
-            <a href="{{ $primaryActionUrl }}" class="rounded-full bg-sun px-7 py-4 text-center font-extrabold text-ink shadow-hard">{{ $primaryActionText }}</a>
+            @if($primaryActionUrl)
+                <a href="{{ $primaryActionUrl }}" class="rounded-full bg-sun px-7 py-4 text-center font-extrabold text-ink shadow-hard">{{ $primaryActionText }}</a>
+            @endif
             @if($showServiceAction)
                 <a href="{{ $serviceActionUrl }}" class="rounded-full bg-rust px-7 py-4 text-center font-extrabold text-white shadow-hard">{{ $serviceActionText }}</a>
             @endif

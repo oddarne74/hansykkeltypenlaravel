@@ -2,11 +2,15 @@
 
 namespace App\Providers;
 
+use App\Enums\BikeStatus;
+use App\Models\Bike;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Throwable;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureViewData();
     }
 
     /**
@@ -46,5 +51,24 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null,
         );
+    }
+
+    protected function configureViewData(): void
+    {
+        View::composer('*', function (\Illuminate\View\View $view): void {
+            static $hasBikesForSale = null;
+
+            if ($hasBikesForSale === null) {
+                try {
+                    $hasBikesForSale = Bike::published()
+                        ->where('status', BikeStatus::FOR_SALE)
+                        ->exists();
+                } catch (Throwable) {
+                    $hasBikesForSale = true;
+                }
+            }
+
+            $view->with('hasBikesForSale', $hasBikesForSale);
+        });
     }
 }

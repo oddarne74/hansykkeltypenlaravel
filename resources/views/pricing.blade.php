@@ -1,13 +1,13 @@
 @extends('layouts.site')
 
-@section('title', 'Priser på sykkelservice | Han Sykkeltypen')
-@section('description', 'Oversikt over våre priser og pakker for sykkelservice i Bodø, Fauske og Salten. Alt fra enkel sikkerhetssjekk til grundig overhaling.')
+@section('title', 'Priser på sykkelservice og sykkelreparasjon | Han Sykkeltypen')
+@section('description', 'Oversikt over våre priser og pakker for sykkelservice og sykkelreparasjon i Bodø, Fauske og Salten. Alt fra enkel sikkerhetssjekk til grundig overhaling.')
 
 @section('content')
 <x-hero
     badge="Oversikt over priser"
-    title="Priser på <span class='text-sun'>sykkelservice</span>"
-    description="Vi tilbyr faste og forutsigbare priser på sykkelservice. Se gjennom våre servicetjenester under og bestill tid for din sykkel."
+    title="Priser på <span class='text-sun'>sykkelservice</span> og sykkelreparasjon"
+    description="Vi tilbyr faste og forutsigbare priser på sykkelservice og sykkelreparasjon. Se gjennom våre servicetjenester under og bestill tid for din sykkel."
     primaryActionText="Bestill service nå →"
     :primaryActionUrl="route('service.create')"
     contactActionText="Ta kontakt ved spørsmål"

@@ -15,8 +15,8 @@ Route::get('/sykler', [BikeController::class, 'index'])->name('bikes.index');
 Route::get('/sykler/{bike:slug}', [BikeController::class, 'show'])->name('bikes.show');
 Route::post('/sykler/{bike:slug}/interessert', [BikeInterestController::class, 'store'])->name('bikes.interest.store');
 Route::get('/bestill-service', [ServiceRequestController::class, 'create'])->name('service.create');
-Route::get('/pricing', PricingController::class)->name('pricing');
-Route::get('/priser', PricingController::class);
+Route::get('/priser', PricingController::class)->name('pricing');
+Route::redirect('/pricing', '/priser', 301);
 Route::post('/bestill-service', [ServiceRequestController::class, 'store'])->name('service.store');
 Route::post('/kontakt', [ContactController::class, 'store'])->middleware('throttle:6,1')->name('contact.store');
 

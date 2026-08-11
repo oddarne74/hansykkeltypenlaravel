@@ -12,7 +12,8 @@ class PricingPageTest extends TestCase
         $response = $this->get(route('pricing'));
 
         $response->assertOk()
-            ->assertViewIs('pricing');
+            ->assertViewIs('pricing')
+            ->assertSee('sykkelreparasjon');
 
         foreach (Service::cases() as $service) {
             $response->assertSee($service->value)
@@ -21,10 +22,10 @@ class PricingPageTest extends TestCase
         }
     }
 
-    public function test_priser_alias_url_works(): void
+    public function test_legacy_pricing_url_redirects_to_priser(): void
     {
-        $this->get('/priser')
-            ->assertOk()
-            ->assertViewIs('pricing');
+        $this->get('/pricing')
+            ->assertStatus(301)
+            ->assertRedirect(route('pricing'));
     }
 }

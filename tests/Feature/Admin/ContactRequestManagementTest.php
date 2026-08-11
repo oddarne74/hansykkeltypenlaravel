@@ -60,15 +60,27 @@ class ContactRequestManagementTest extends TestCase
         Mail::assertQueued(ContactReceived::class);
     }
 
-    public function test_service_subject_is_not_allowed_in_contact_form(): void
+    public function test_service_subject_is_allowed_in_contact_form(): void
     {
+        Mail::fake();
+
         $this->post(route('contact.store'), [
             'name' => 'Kari Nordmann',
             'contact' => '99887766',
             'subject' => 'service',
             'message' => 'Trenger service',
             'consent' => '1',
-        ])->assertSessionHasErrors('subject');
+        ])->assertRedirect()->assertSessionHas('status');
+
+        $this->assertDatabaseHas('contact_requests', [
+            'name' => 'Kari Nordmann',
+            'contact' => '99887766',
+            'subject' => 'service',
+            'message' => 'Trenger service',
+            'read_at' => null,
+        ]);
+
+        Mail::assertQueued(ContactReceived::class);
     }
 
     public function test_guests_are_redirected_from_the_contact_requests_page(): void

@@ -13,6 +13,7 @@ class ExampleTest extends TestCase
     {
         $response = $this->get(route('home'));
 
-        $response->assertOk();
+        $response->assertOk()
+            ->assertSee('sykkelreparasjon');
     }
 }

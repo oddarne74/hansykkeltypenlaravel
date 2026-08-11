@@ -6,6 +6,7 @@
     <label>Hva gjelder det?
         <select name="subject" required>
             <option value="bike">Jeg ser etter en sykkel</option>
+            <option value="service">Sykkelreparasjon</option>
             <option value="sell">Selge eller gi bort en sykkel</option>
             <option value="other">Annet</option>
         </select>

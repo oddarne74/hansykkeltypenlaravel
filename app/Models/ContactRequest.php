@@ -8,7 +8,7 @@ class ContactRequest extends Model
 {
     public const SUBJECTS = [
         'bike' => 'Jeg ser etter en sykkel',
-        'service' => 'Service eller reparasjon',
+        'service' => 'Sykkelreparasjon',
         'sell' => 'Selge eller gi bort en sykkel',
         'other' => 'Annet',
     ];

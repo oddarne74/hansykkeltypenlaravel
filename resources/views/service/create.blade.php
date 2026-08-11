@@ -85,9 +85,6 @@
                     </ul>
                 </div>
             @endif
-            @if(session('status'))
-                <div class="rounded bg-green-100 p-3 font-bold">{{ session('status') }}</div>
-            @endif
 
             <button class="rounded-full bg-rust px-7 py-4 font-extrabold text-white">Send serviceforespørsel</button>
         </form>

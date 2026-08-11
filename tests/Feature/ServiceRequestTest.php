@@ -107,7 +107,7 @@ class ServiceRequestTest extends TestCase
         $nextWeekStart = CarbonImmutable::now()->startOfWeek()->addWeek()->format('Y-m-d');
         $file = UploadedFile::fake()->create('bike.jpg', 100, 'image/jpeg');
 
-        $response = $this->post(route('service.store'), [
+        $response = $this->from(route('service.create'))->post(route('service.store'), [
             'service_type' => Service::GRUNDIG_SERVICE->value,
             'name' => 'Kari Nordmann',
             'email' => 'kari@example.com',
@@ -119,8 +119,13 @@ class ServiceRequestTest extends TestCase
             'images' => [$file],
         ]);
 
-        $response->assertRedirect();
+        $response->assertRedirect(route('service.create'));
         $response->assertSessionHas('status');
+
+        $this->get(route('service.create'))
+            ->assertOk()
+            ->assertSee('id="toast-status"', false)
+            ->assertSee('Takk! Vi har mottatt serviceforespørselen din og gir deg beskjed så snart den er behandlet.');
 
         $request = ServiceRequest::first();
         $this->assertNotNull($request);

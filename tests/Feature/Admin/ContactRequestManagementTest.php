@@ -41,13 +41,21 @@ class ContactRequestManagementTest extends TestCase
     {
         Mail::fake();
 
-        $this->post(route('contact.store'), [
+        $response = $this->from(route('home'))->post(route('contact.store'), [
             'name' => 'Kari Nordmann',
             'contact' => '99887766',
             'subject' => 'bike',
             'message' => 'Jeg lurer på om dere har en damesykkel på lager.',
             'consent' => '1',
-        ])->assertRedirect()->assertSessionHas('status');
+        ]);
+
+        $response->assertRedirect(route('home'))
+            ->assertSessionHas('status', 'Takk! Henvendelsen er sendt.');
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('id="toast-status"', false)
+            ->assertSee('Takk! Henvendelsen er sendt.');
 
         $this->assertDatabaseHas('contact_requests', [
             'name' => 'Kari Nordmann',

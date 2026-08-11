@@ -19,8 +19,5 @@
     @if($errors->any())
         <div class="rounded bg-red-100 p-3 text-sm text-red-800">Sjekk at alle felt er riktig utfylt.</div>
     @endif
-    @if(session('status'))
-        <div class="rounded bg-green-100 p-3 font-bold">{{ session('status') }}</div>
-    @endif
     <button class="rounded-full bg-rust px-7 py-4 font-extrabold text-white">Send henvendelse</button>
 </form>

@@ -4,15 +4,22 @@ namespace App\Models;
 
 use App\Enums\BikeStatus;
 use App\Mail\BikeAvailable;
+use Carbon\CarbonImmutable;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class Bike extends Model
 {
     use HasFactory;
+
+    public const FEATURED_BIKES_CACHE_KEY = 'home.featured_bikes';
+
+    private bool $wasEligibleForPromotion = false;
 
     protected $fillable = ['name', 'slug', 'brand', 'model', 'type', 'price', 'status', 'size', 'rider_height', 'wheel_size', 'gears', 'frame', 'brakes', 'color', 'year', 'description', 'condition_notes', 'featured', 'published_at'];
 
@@ -25,7 +32,24 @@ class Bike extends Model
             }
         });
 
-        static::updated(function (Bike $bike) {
+        static::created(function (Bike $bike): void {
+            if ($bike->qualifiesForPromotionFromAttributes($bike->getAttributes())) {
+                Cache::forget(self::FEATURED_BIKES_CACHE_KEY);
+            }
+        });
+
+        static::updating(function (Bike $bike): void {
+            $bike->wasEligibleForPromotion = $bike->qualifiesForPromotionFromAttributes($bike->getOriginal());
+        });
+
+        static::updated(function (Bike $bike): void {
+            $wasEligible = $bike->wasEligibleForPromotion;
+            $isEligible = $bike->qualifiesForPromotionFromAttributes($bike->getAttributes());
+
+            if ($wasEligible !== $isEligible) {
+                Cache::forget(self::FEATURED_BIKES_CACHE_KEY);
+            }
+
             if ($bike->wasChanged('status') && $bike->status === BikeStatus::FOR_SALE && $bike->getOriginal('status') === BikeStatus::RESERVED) {
                 foreach ($bike->interests as $interest) {
                     Mail::to($interest->email)->queue(new BikeAvailable($bike));
@@ -33,6 +57,45 @@ class Bike extends Model
                 }
             }
         });
+
+        static::deleted(function (Bike $bike): void {
+            if ($bike->qualifiesForPromotionFromAttributes($bike->getAttributes())) {
+                Cache::forget(self::FEATURED_BIKES_CACHE_KEY);
+            }
+        });
+    }
+
+    /**
+     * @param  array<string, mixed>  $attributes
+     */
+    private function qualifiesForPromotionFromAttributes(array $attributes): bool
+    {
+        $isFeatured = (bool) ($attributes['featured'] ?? false);
+        $status = $attributes['status'] ?? null;
+        $publishedAt = $attributes['published_at'] ?? null;
+
+        if ($status instanceof BikeStatus) {
+            $status = $status->value;
+        }
+
+        if (! $isFeatured) {
+            return false;
+        }
+
+        if ($status !== BikeStatus::FOR_SALE->value) {
+            return false;
+        }
+
+        if ($publishedAt === null) {
+            return false;
+        }
+
+        $publishedAtDate = match (true) {
+            $publishedAt instanceof DateTimeInterface => CarbonImmutable::instance($publishedAt),
+            default => CarbonImmutable::parse((string) $publishedAt),
+        };
+
+        return $publishedAtDate->lte(now());
     }
 
     protected function casts(): array

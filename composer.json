@@ -7,6 +7,7 @@
         "php": "^8.5",
         "filament/filament": "^5.7",
         "hansykkeltypen/web-stats": "@dev",
+        "intervention/image-laravel": "^4.1",
         "laravel/fortify": "^1.37",
         "laravel/framework": "^13.0",
         "laravel/nightwatch": "^1.28",

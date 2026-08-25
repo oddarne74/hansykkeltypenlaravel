@@ -32,8 +32,8 @@
             @keydown.enter.prevent="open(current)"
             @keydown.space.prevent="open(current)"
         >
-            <div class="relative aspect-[16/9] overflow-hidden bg-forest">
-                <img :src="images[current].src" :alt="images[current].alt" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
+            <div class="relative flex min-h-[350px] max-h-[450px] w-full items-center justify-center overflow-hidden bg-forest lg:max-h-[520px]">
+                <img :src="images[current].src" :alt="images[current].alt" class="max-h-[450px] w-full object-contain transition duration-500 group-hover:scale-105 lg:max-h-[520px]">
                 <template x-if="images[current].caption">
                     <span class="absolute left-4 top-4 rounded-full bg-rust px-3 py-1 text-xs font-black uppercase text-white" x-text="images[current].caption"></span>
                 </template>
@@ -83,7 +83,8 @@
 
             {{-- Image stage with swipe support --}}
             <div
-                class="relative mx-auto my-4 flex w-full max-w-7xl flex-1 items-center justify-center overflow-hidden"
+                class="relative mx-auto my-4 flex w-full max-w-7xl flex-1 items-center justify-center"
+                :class="isFullSize ? 'overflow-auto items-start justify-start p-8 md:p-16' : 'overflow-hidden items-center justify-center'"
                 @touchstart.passive="touchStart($event)"
                 @touchend.passive="touchEnd($event)"
             >
@@ -91,7 +92,7 @@
                     type="button"
                     class="absolute left-2 top-1/2 grid size-12 -translate-y-1/2 place-items-center rounded-full border-2 border-white/20 bg-ink/80 text-2xl font-bold text-white shadow-xl transition hover:border-ink hover:bg-sun hover:text-ink focus-ring md:left-6 md:size-14"
                     aria-label="Forrige bilde"
-                    x-show="images.length > 1"
+                    x-show="images.length > 1 && !isFullSize"
                     @click="prev()"
                 >&larr;</button>
 
@@ -99,9 +100,12 @@
                     <img
                         :src="images[current].src"
                         :alt="images[current].alt"
-                        class="max-h-[75vh] max-w-full rounded-2xl object-contain shadow-2xl"
+                        @click.stop="isFullSize = !isFullSize"
+                        :class="isFullSize ? 'max-h-none max-w-none cursor-zoom-out' : 'max-h-[75vh] max-w-full cursor-zoom-in'"
+                        class="rounded-2xl object-contain shadow-2xl transition-all duration-200"
+                        :title="isFullSize ? 'Klikk for å tilpasse' : 'Klikk for full størrelse'"
                     >
-                    <figcaption class="text-center text-sm font-medium text-white/80" x-show="images[current].alt || images[current].caption">
+                    <figcaption class="text-center text-sm font-medium text-white/80" x-show="(images[current].alt || images[current].caption) && !isFullSize">
                         <span x-text="images[current].alt"></span>
                         <template x-if="images[current].caption">
                             <span class="text-sun" x-text="' — ' + images[current].caption"></span>
@@ -113,7 +117,7 @@
                     type="button"
                     class="absolute right-2 top-1/2 grid size-12 -translate-y-1/2 place-items-center rounded-full border-2 border-white/20 bg-ink/80 text-2xl font-bold text-white shadow-xl transition hover:border-ink hover:bg-sun hover:text-ink focus-ring md:right-6 md:size-14"
                     aria-label="Neste bilde"
-                    x-show="images.length > 1"
+                    x-show="images.length > 1 && !isFullSize"
                     @click="next()"
                 >&rarr;</button>
             </div>

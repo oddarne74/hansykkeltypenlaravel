@@ -61,7 +61,7 @@ class AppServiceProvider extends ServiceProvider
             if ($hasBikesForSale === null) {
                 try {
                     $hasBikesForSale = Bike::published()
-                        ->where('status', BikeStatus::FOR_SALE)
+                        ->whereIn('status', [BikeStatus::FOR_SALE, BikeStatus::RESERVED, BikeStatus::IN_PROGRESS])
                         ->exists();
                 } catch (Throwable) {
                     $hasBikesForSale = true;

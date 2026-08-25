@@ -142,4 +142,17 @@ class BikePagesTest extends TestCase
             ->assertDontSee('Jeg er interessert')
             ->assertDontSee('Meld interesse');
     }
+
+    public function test_bike_with_in_progress_status_is_eligible_for_listing(): void
+    {
+        $bike = $this->makeBike(['name' => 'Under Arbeid Sykkel', 'slug' => 'under-arbeid-sykkel', 'status' => BikeStatus::IN_PROGRESS]);
+
+        $this->get(route('bikes.index'))
+            ->assertOk()
+            ->assertSee('Under Arbeid Sykkel');
+
+        $this->get(route('bikes.show', $bike))
+            ->assertOk()
+            ->assertSee('Jeg er interessert');
+    }
 }

@@ -214,6 +214,18 @@ class BikeManagementTest extends TestCase
         $this->assertSame(BikeStatus::SOLD, $bike->refresh()->status);
     }
 
+    public function test_the_status_can_be_changed_to_in_progress_from_the_list(): void
+    {
+        $bike = $this->makeBike(['status' => BikeStatus::FOR_SALE]);
+
+        $this->actingAs(User::factory()->create());
+
+        Livewire::test(ListBikes::class)
+            ->call('updateTableColumnState', 'status', (string) $bike->getKey(), BikeStatus::IN_PROGRESS->value);
+
+        $this->assertSame(BikeStatus::IN_PROGRESS, $bike->refresh()->status);
+    }
+
     public function test_bikes_can_be_filtered_by_featured_status(): void
     {
         $featuredBike = $this->makeBike(['slug' => 'bike-featured', 'featured' => true]);

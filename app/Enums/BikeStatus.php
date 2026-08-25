@@ -7,6 +7,7 @@ enum BikeStatus: string
     case FOR_SALE = 'Til salgs';
     case RESERVED = 'Reservert';
     case SOLD = 'Solgt';
+    case IN_PROGRESS = 'Under arbeid';
 
     /**
      * @return array<string, string>
@@ -17,6 +18,7 @@ enum BikeStatus: string
             self::FOR_SALE->value => 'Til salgs',
             self::RESERVED->value => 'Reservert',
             self::SOLD->value => 'Solgt',
+            self::IN_PROGRESS->value => 'Under arbeid',
         ];
     }
 }

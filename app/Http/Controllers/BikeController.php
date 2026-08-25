@@ -21,7 +21,7 @@ class BikeController extends Controller
 
         $bikes = Bike::published()
             ->with('images')
-            ->whereIn('status', [BikeStatus::FOR_SALE->value, BikeStatus::RESERVED->value])
+            ->whereIn('status', [BikeStatus::FOR_SALE->value, BikeStatus::RESERVED->value, BikeStatus::IN_PROGRESS->value])
             ->when($filters['brand'] ?? null, fn ($query, $brand) => $query->where('brand', $brand))
             ->when($filters['size'] ?? null, fn ($query, $size) => $query->where('size', $size))
             ->when($filters['gears'] ?? null, fn ($query, $gears) => $query->where('gears', $gears))
@@ -35,9 +35,9 @@ class BikeController extends Controller
             'bikes' => $bikes,
             'filters' => $filters,
             'filterOptions' => [
-                'brands' => Bike::published()->distinct()->orderBy('brand')->pluck('brand'),
-                'sizes' => Bike::published()->whereNotNull('size')->distinct()->orderBy('size')->pluck('size'),
-                'gears' => Bike::published()->whereNotNull('gears')->distinct()->orderBy('gears')->pluck('gears'),
+                'brands' => Bike::published()->whereIn('status', [BikeStatus::FOR_SALE->value, BikeStatus::RESERVED->value, BikeStatus::IN_PROGRESS->value])->distinct()->orderBy('brand')->pluck('brand'),
+                'sizes' => Bike::published()->whereIn('status', [BikeStatus::FOR_SALE->value, BikeStatus::RESERVED->value, BikeStatus::IN_PROGRESS->value])->whereNotNull('size')->distinct()->orderBy('size')->pluck('size'),
+                'gears' => Bike::published()->whereIn('status', [BikeStatus::FOR_SALE->value, BikeStatus::RESERVED->value, BikeStatus::IN_PROGRESS->value])->whereNotNull('gears')->distinct()->orderBy('gears')->pluck('gears'),
             ],
         ]);
     }

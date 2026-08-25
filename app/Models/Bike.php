@@ -82,7 +82,17 @@ class Bike extends Model
             return false;
         }
 
-        if ($status !== BikeStatus::FOR_SALE->value) {
+        if ($status === BikeStatus::FOR_SALE->value) {
+            // Eligible
+        } elseif ($status === BikeStatus::IN_PROGRESS->value) {
+            $hasForSaleBikes = self::published()
+                ->where('status', BikeStatus::FOR_SALE)
+                ->where('id', '!=', $attributes['id'] ?? null)
+                ->exists();
+            if ($hasForSaleBikes) {
+                return false;
+            }
+        } else {
             return false;
         }
 

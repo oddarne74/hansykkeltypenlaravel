@@ -10,7 +10,7 @@
                 <div>
                     <p class="eyebrow text-sun">{{ $bike->type }}</p>
                     <h1 class="font-display text-5xl uppercase sm:text-7xl">{{ $bike->name }}</h1>
-                    <p class="mt-5 max-w-2xl text-lg leading-8 text-white/75">{{ $bike->description }}</p>
+                    <p class="mt-5 max-w-2xl text-lg leading-8 text-white/75 whitespace-pre-line">{!! nl2br(e($bike->description)) !!}</p>
                 </div>
                 <div class="rounded-3xl border-2 border-white/20 p-7">
                     <div class="flex items-center justify-between">
@@ -64,13 +64,13 @@
                         @foreach($bike->workItems as $item)
                             <article class="card">
                                 <h3>{{ $item->title }}</h3>
-                                <p>{{ $item->description }}</p>
+                                <p class="whitespace-pre-line">{!! nl2br(e($item->description)) !!}</p>
                             </article>
                         @endforeach
                     </div>
                     <div class="mt-6 border-l-4 border-rust pl-5">
                         <strong>Tilstandsmerknader</strong>
-                        <p class="mt-2 text-ink/70">{{ $bike->condition_notes }}</p>
+                        <p class="mt-2 text-ink/70 whitespace-pre-line">{!! nl2br(e($bike->condition_notes)) !!}</p>
                     </div>
                 </div>
             </div>

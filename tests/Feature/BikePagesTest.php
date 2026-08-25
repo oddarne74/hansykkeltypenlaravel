@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Enums\BikeStatus;
 use App\Models\Bike;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class BikePagesTest extends TestCase
@@ -154,5 +155,47 @@ class BikePagesTest extends TestCase
         $this->get(route('bikes.show', $bike))
             ->assertOk()
             ->assertSee('Jeg er interessert');
+    }
+
+    public function test_bike_description_formatting_preserves_line_breaks(): void
+    {
+        $bike = $this->makeBike([
+            'description' => "Første linje\nAndre linje",
+            'condition_notes' => "Merknad 1\nMerknad 2",
+        ]);
+
+        $this->get(route('bikes.show', $bike))
+            ->assertOk()
+            ->assertSee('Første linje<br />', false)
+            ->assertSee('Andre linje', false)
+            ->assertSee('Merknad 1<br />', false);
+    }
+
+    public function test_in_progress_bike_is_promoted_on_front_page_when_no_other_bikes_are_available(): void
+    {
+        $bike = $this->makeBike([
+            'name' => 'Prosjekt Sykkel',
+            'slug' => 'prosjekt-sykkel',
+            'status' => BikeStatus::IN_PROGRESS,
+            'featured' => true,
+        ]);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('Prosjekt Sykkel');
+
+        $forSaleBike = $this->makeBike([
+            'name' => 'Til Salgs Sykkel',
+            'slug' => 'til-salgs-sykkel',
+            'status' => BikeStatus::FOR_SALE,
+            'featured' => true,
+        ]);
+
+        Cache::forget(Bike::FEATURED_BIKES_CACHE_KEY);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('Til Salgs Sykkel')
+            ->assertDontSee('Prosjekt Sykkel');
     }
 }

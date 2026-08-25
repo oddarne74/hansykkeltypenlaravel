@@ -61,7 +61,50 @@ class TrackWebStats
             return false;
         }
 
+        if ($this->isBot($request)) {
+            return false;
+        }
+
         return true;
+    }
+
+    protected function isBot(Request $request): bool
+    {
+        $userAgent = $request->userAgent();
+
+        if (! $userAgent) {
+            return false;
+        }
+
+        $bots = [
+            'bot',
+            'crawler',
+            'spider',
+            'slurp',
+            'archiver',
+            'mediapartners',
+            'validator',
+            'crawl',
+            'inspection',
+            'checker',
+            'scanner',
+            'curl',
+            'wget',
+            'python',
+            'java',
+            'libwww',
+            'httpclient',
+            'axios',
+            'postman',
+        ];
+
+        foreach ($bots as $bot) {
+            if (stripos($userAgent, $bot) !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected function extractTitle(Response $response): ?string

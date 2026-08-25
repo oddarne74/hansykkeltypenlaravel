@@ -59,4 +59,26 @@ class WebStatsTest extends TestCase
             ->assertSuccessful()
             ->assertSee('Test Page Title');
     }
+
+    public function test_bot_requests_are_not_tracked_in_web_stats(): void
+    {
+        $this->withHeader('User-Agent', 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)')
+            ->get(route('home'))
+            ->assertOk();
+
+        $this->assertDatabaseMissing(WebStat::class, [
+            'url' => route('home'),
+        ]);
+    }
+
+    public function test_human_requests_are_tracked_in_web_stats(): void
+    {
+        $this->withHeader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+            ->get(route('home'))
+            ->assertOk();
+
+        $this->assertDatabaseHas(WebStat::class, [
+            'url' => route('home'),
+        ]);
+    }
 }

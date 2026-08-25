@@ -171,6 +171,40 @@ class BikePagesTest extends TestCase
             ->assertSee('Merknad 1<br />', false);
     }
 
+    public function test_bike_detail_page_renders_alpine_lightbox_for_images(): void
+    {
+        $bike = $this->makeBike();
+        $bike->images()->create([
+            'path' => 'images/bikes/before.jpg',
+            'alt' => 'Sykkelen før klargjøring',
+            'stage' => 'before',
+            'sort_order' => 1,
+        ]);
+        $bike->images()->create([
+            'path' => 'images/bikes/after.jpg',
+            'alt' => 'Sykkelen etter klargjøring',
+            'stage' => 'after',
+            'sort_order' => 2,
+        ]);
+
+        $this->get(route('bikes.show', $bike))
+            ->assertOk()
+            ->assertSee('x-data="lightbox', false)
+            ->assertSee('Alpine.data(\'lightbox\'', false)
+            ->assertSee('Sykkelen før klargjøring')
+            ->assertSee('Sykkelen etter klargjøring')
+            ->assertSee('after.jpg', false);
+    }
+
+    public function test_bike_detail_page_without_images_does_not_render_lightbox(): void
+    {
+        $bike = $this->makeBike();
+
+        $this->get(route('bikes.show', $bike))
+            ->assertOk()
+            ->assertDontSee('x-data="lightbox', false);
+    }
+
     public function test_in_progress_bike_is_promoted_on_front_page_when_no_other_bikes_are_available(): void
     {
         $bike = $this->makeBike([

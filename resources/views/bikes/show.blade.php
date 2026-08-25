@@ -35,14 +35,20 @@
     
     <section class="grain px-5 py-16 lg:px-8">
         <div class="mx-auto max-w-7xl">
-            @php($main = $bike->images->first())
-            <div class="overflow-hidden rounded-3xl border-2 border-ink bg-paper shadow-hard">
-                @if($main)
-                    <img src="{{ asset('storage/'.$main->path) }}" alt="{{ $main->alt }}" class="aspect-[16/9] w-full object-cover">
-                @else
+            @if($bike->images->isNotEmpty())
+                <x-lightbox
+                    :images="$bike->images->map(fn ($image) => [
+                        'src' => asset('storage/'.$image->path),
+                        'thumb' => asset('storage/'.$image->path),
+                        'alt' => $image->alt ?: $bike->name,
+                        'caption' => $image->stage === 'before' ? 'Før' : ($image->stage === 'after' ? 'Etter' : ''),
+                    ])->all()"
+                />
+            @else
+                <div class="overflow-hidden rounded-3xl border-2 border-ink bg-paper shadow-hard">
                     <div class="grid aspect-[16/9] place-items-center bg-sun text-8xl">🚲</div>
-                @endif
-            </div>
+                </div>
+            @endif
             
             <div class="mt-12 grid gap-10 lg:grid-cols-2">
                 <div>
@@ -74,25 +80,6 @@
                     </div>
                 </div>
             </div>
-
-            @if($bike->images->count()>1)
-                <div class="mt-16">
-                    <p class="eyebrow">Dokumentert arbeid</p>
-                    <h2>Før og etter</h2>
-                    <p class="lead max-w-3xl">Bildene viser sykkelen og detaljene før og etter klargjøring.</p>
-                    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                        @foreach($bike->images->skip(1) as $image)
-                            <figure class="overflow-hidden rounded-3xl border-2 border-ink bg-paper">
-                                <img src="{{ asset('storage/'.$image->path) }}" alt="{{ $image->alt }}" class="aspect-[4/3] w-full object-cover">
-                                <figcaption class="flex justify-between p-4 font-bold">
-                                    <span>{{ $image->alt }}</span>
-                                    <span class="text-rust">{{ $image->stage==='before'?'Før':'Etter' }}</span>
-                                </figcaption>
-                            </figure>
-                        @endforeach
-                    </div>
-                </div>
-            @endif
         </div>
     </section>
 @endsection

@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Contracts\GeneratesImageVariants;
 use App\Enums\BikeStatus;
 use App\Models\Bike;
+use App\Services\Images\ImageVariantGenerator;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(GeneratesImageVariants::class, ImageVariantGenerator::class);
     }
 
     /**

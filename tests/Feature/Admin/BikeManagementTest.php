@@ -253,6 +253,7 @@ class BikeManagementTest extends TestCase
 
     public function test_an_image_can_be_uploaded_and_deleted(): void
     {
+        Storage::fake('local');
         Storage::fake('public');
 
         $bike = $this->makeBike();
@@ -275,7 +276,23 @@ class BikeManagementTest extends TestCase
         $this->assertNotNull($image);
         $this->assertSame('after', $image->stage);
         $this->assertSame(1, $image->sort_order);
-        Storage::disk('public')->assertExists($image->path);
+
+        // The original upload is kept private and is never exposed on the public disk.
+        Storage::disk('local')->assertExists($image->path);
+        Storage::disk('public')->assertMissing($image->path);
+
+        // An optimized thumbnail and large version are generated on the public disk, and they are not identical in size or dimensions.
+        $this->assertNotNull($image->thumbnail_path);
+        $this->assertNotNull($image->large_path);
+        Storage::disk('public')->assertExists($image->thumbnail_path);
+        Storage::disk('public')->assertExists($image->large_path);
+        $this->assertNotSame(
+            Storage::disk('public')->size($image->thumbnail_path),
+            Storage::disk('public')->size($image->large_path)
+        );
+        $thumbSize = getimagesizefromstring(Storage::disk('public')->get($image->thumbnail_path));
+        $largeSize = getimagesizefromstring(Storage::disk('public')->get($image->large_path));
+        $this->assertNotSame($thumbSize[0], $largeSize[0]);
 
         Livewire::test(ImagesRelationManager::class, [
             'ownerRecord' => $bike->refresh(),
@@ -284,11 +301,14 @@ class BikeManagementTest extends TestCase
             ->callTableAction(DeleteAction::class, $image);
 
         $this->assertDatabaseMissing('bike_images', ['id' => $image->id]);
-        Storage::disk('public')->assertMissing($image->path);
+        Storage::disk('local')->assertMissing($image->path);
+        Storage::disk('public')->assertMissing($image->thumbnail_path);
+        Storage::disk('public')->assertMissing($image->large_path);
     }
 
     public function test_image_upload_requires_an_image_file(): void
     {
+        Storage::fake('local');
         Storage::fake('public');
 
         $bike = $this->makeBike();

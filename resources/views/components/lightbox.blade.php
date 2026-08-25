@@ -33,7 +33,7 @@
             @keydown.space.prevent="open(current)"
         >
             <div class="relative aspect-[16/9] overflow-hidden bg-forest">
-                <img :src="images[current].thumb" :alt="images[current].alt" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
+                <img :src="images[current].src" :alt="images[current].alt" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
                 <template x-if="images[current].caption">
                     <span class="absolute left-4 top-4 rounded-full bg-rust px-3 py-1 text-xs font-black uppercase text-white" x-text="images[current].caption"></span>
                 </template>

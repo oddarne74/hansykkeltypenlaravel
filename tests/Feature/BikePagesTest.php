@@ -6,6 +6,7 @@ use App\Enums\BikeStatus;
 use App\Models\Bike;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class BikePagesTest extends TestCase
@@ -203,6 +204,56 @@ class BikePagesTest extends TestCase
         $this->get(route('bikes.show', $bike))
             ->assertOk()
             ->assertDontSee('x-data="lightbox', false);
+    }
+
+    public function test_bike_detail_page_lightbox_uses_large_image_for_main_display(): void
+    {
+        Storage::fake('local');
+        Storage::fake('public');
+
+        $bike = $this->makeBike();
+        Storage::disk('local')->put('originals/bikes/'.$bike->slug.'/photo.jpg', 'fake-bytes');
+        Storage::disk('public')->put('images/bikes/'.$bike->slug.'/photo-thumb.webp', 'thumb-bytes');
+        Storage::disk('public')->put('images/bikes/'.$bike->slug.'/photo-large.webp', 'large-bytes');
+
+        $image = $bike->images()->create([
+            'path' => 'originals/bikes/'.$bike->slug.'/photo.jpg',
+            'thumbnail_path' => 'images/bikes/'.$bike->slug.'/photo-thumb.webp',
+            'large_path' => 'images/bikes/'.$bike->slug.'/photo-large.webp',
+            'alt' => 'Testbilde',
+            'stage' => 'after',
+            'sort_order' => 1,
+        ]);
+
+        $this->get(route('bikes.show', $bike))
+            ->assertOk()
+            ->assertSee('photo-large.webp')
+            ->assertSee('photo-thumb.webp');
+    }
+
+    public function test_bike_card_uses_the_optimized_thumbnail_instead_of_the_private_original(): void
+    {
+        Storage::fake('local');
+        Storage::fake('public');
+
+        $bike = $this->makeBike();
+        Storage::disk('local')->put('originals/bikes/'.$bike->slug.'/photo.jpg', 'fake-bytes');
+        Storage::disk('public')->put('images/bikes/'.$bike->slug.'/photo-thumb.webp', 'thumb-bytes');
+        Storage::disk('public')->put('images/bikes/'.$bike->slug.'/photo-large.webp', 'large-bytes');
+
+        $image = $bike->images()->create([
+            'path' => 'originals/bikes/'.$bike->slug.'/photo.jpg',
+            'thumbnail_path' => 'images/bikes/'.$bike->slug.'/photo-thumb.webp',
+            'large_path' => 'images/bikes/'.$bike->slug.'/photo-large.webp',
+            'alt' => 'Testbilde',
+            'stage' => 'after',
+            'sort_order' => 1,
+        ]);
+
+        $this->get(route('bikes.index'))
+            ->assertOk()
+            ->assertSee($image->thumbnail_url, false)
+            ->assertDontSee('originals/bikes', false);
     }
 
     public function test_in_progress_bike_is_promoted_on_front_page_when_no_other_bikes_are_available(): void

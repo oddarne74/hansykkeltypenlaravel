@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 
 class Bike extends Model
 {
@@ -28,7 +27,7 @@ class Bike extends Model
         // Remove image files from storage before the bike (and its images, via DB cascade) is deleted.
         static::deleting(function (Bike $bike): void {
             foreach ($bike->images as $image) {
-                Storage::disk('public')->delete($image->path);
+                $image->delete();
             }
         });
 

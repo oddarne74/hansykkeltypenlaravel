@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Bikes\RelationManagers;
 
 use App\Models\Bike;
+use App\Models\BikeImage;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -34,10 +35,11 @@ class ImagesRelationManager extends RelationManager
                 FileUpload::make('path')
                     ->label('Bildefil')
                     ->image()
-                    ->disk('public')
-                    ->directory(fn (): string => 'images/bikes/'.$this->getOwnerRecord()->getAttribute('slug'))
+                    ->disk('local')
+                    ->directory(fn (): string => 'originals/bikes/'.$this->getOwnerRecord()->getAttribute('slug'))
                     ->maxSize(5120)
-                    ->required(),
+                    ->required()
+                    ->helperText('Bildet lagres privat. En optimalisert miniatyr- og storversjon genereres automatisk og vises på nettsiden.'),
                 TextInput::make('alt')
                     ->label('Alternativ tekst (for skjermlesere og SEO)')
                     ->placeholder('F.eks. Trek 7200 sett fra siden')
@@ -61,9 +63,10 @@ class ImagesRelationManager extends RelationManager
             ->defaultSort('sort_order')
             ->reorderable('sort_order')
             ->columns([
-                ImageColumn::make('path')
+                ImageColumn::make('thumbnail_path')
                     ->label('Bilde')
-                    ->disk('public'),
+                    ->disk('public')
+                    ->getStateUsing(fn (BikeImage $record): string => $record->thumbnail_path ?? $record->path),
                 TextColumn::make('alt')
                     ->label('Alternativ tekst')
                     ->searchable(),

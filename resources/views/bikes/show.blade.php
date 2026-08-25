@@ -38,8 +38,8 @@
             @if($bike->images->isNotEmpty())
                 <x-lightbox
                     :images="$bike->images->map(fn ($image) => [
-                        'src' => asset('storage/'.$image->path),
-                        'thumb' => asset('storage/'.$image->path),
+                        'src' => $image->large_url,
+                        'thumb' => $image->thumbnail_url,
                         'alt' => $image->alt ?: $bike->name,
                         'caption' => $image->stage === 'before' ? 'Før' : ($image->stage === 'after' ? 'Etter' : ''),
                     ])->all()"

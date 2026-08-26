@@ -34,30 +34,24 @@ class ExampleTest extends TestCase
         $this->get(route('home'))->assertOk();
     }
 
-    public function test_busts_frontpage_featured_bikes_cache_when_a_bike_becomes_eligible_for_promotion(): void
+    public function test_busts_frontpage_featured_bikes_cache_when_a_bike_is_created(): void
     {
         Cache::spy();
 
-        $bike = Bike::factory()->create([
-            'featured' => false,
-        ]);
-
-        $bike->update(['featured' => true]);
+        Bike::factory()->create();
 
         Cache::shouldHaveReceived('forget')
             ->once()
             ->with(Bike::FEATURED_BIKES_CACHE_KEY);
     }
 
-    public function test_busts_frontpage_featured_bikes_cache_when_a_bike_becomes_ineligible_for_promotion(): void
+    public function test_busts_frontpage_featured_bikes_cache_when_a_bike_is_updated(): void
     {
-        $bike = Bike::factory()->create([
-            'featured' => true,
-        ]);
+        $bike = Bike::factory()->create();
 
         Cache::spy();
 
-        $bike->update(['featured' => false]);
+        $bike->update(['brand' => 'Updated Brand']);
 
         Cache::shouldHaveReceived('forget')
             ->once()

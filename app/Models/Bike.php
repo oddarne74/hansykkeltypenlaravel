@@ -32,22 +32,11 @@ class Bike extends Model
         });
 
         static::created(function (Bike $bike): void {
-            if ($bike->qualifiesForPromotionFromAttributes($bike->getAttributes())) {
-                Cache::forget(self::FEATURED_BIKES_CACHE_KEY);
-            }
-        });
-
-        static::updating(function (Bike $bike): void {
-            $bike->wasEligibleForPromotion = $bike->qualifiesForPromotionFromAttributes($bike->getOriginal());
+            Cache::forget(self::FEATURED_BIKES_CACHE_KEY);
         });
 
         static::updated(function (Bike $bike): void {
-            $wasEligible = $bike->wasEligibleForPromotion;
-            $isEligible = $bike->qualifiesForPromotionFromAttributes($bike->getAttributes());
-
-            if ($wasEligible !== $isEligible) {
-                Cache::forget(self::FEATURED_BIKES_CACHE_KEY);
-            }
+            Cache::forget(self::FEATURED_BIKES_CACHE_KEY);
 
             if ($bike->wasChanged('status') && $bike->status === BikeStatus::FOR_SALE && $bike->getOriginal('status') === BikeStatus::RESERVED) {
                 foreach ($bike->interests as $interest) {
@@ -58,9 +47,7 @@ class Bike extends Model
         });
 
         static::deleted(function (Bike $bike): void {
-            if ($bike->qualifiesForPromotionFromAttributes($bike->getAttributes())) {
-                Cache::forget(self::FEATURED_BIKES_CACHE_KEY);
-            }
+            Cache::forget(self::FEATURED_BIKES_CACHE_KEY);
         });
     }
 

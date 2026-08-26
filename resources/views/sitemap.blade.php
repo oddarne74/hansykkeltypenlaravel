@@ -11,11 +11,6 @@
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>{{ route('pricing') }}</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
         <loc>{{ route('locations.bodo') }}</loc>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>

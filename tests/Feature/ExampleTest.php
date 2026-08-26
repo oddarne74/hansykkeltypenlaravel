@@ -63,6 +63,7 @@ class ExampleTest extends TestCase
         $response = $this->get(route('home'));
 
         $response->assertOk()
-            ->assertSee('sykkelreparasjon');
+            ->assertSee('Solide bruktsykler')
+            ->assertDontSee('sykkelreparasjon');
     }
 }

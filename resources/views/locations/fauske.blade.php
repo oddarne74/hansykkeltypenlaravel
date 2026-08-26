@@ -1,24 +1,23 @@
 @extends('layouts.site')
 
-@section('title', 'Brukte sykler og sykkelservice i Fauske | Han Sykkeltypen')
-@section('description', 'Han Sykkeltypen tilbyr solide bruktsykler og sykkelservice i Fauske. Vi henter og leverer sykkelen din etter avtale.')
+@section('title', 'Brukte sykler i Fauske | Han Sykkeltypen')
+@section('description', 'Han Sykkeltypen selger solide, oppussede bruktsykler i Fauske. Hver sykkel blir kontrollert, rengjort, justert og prøvekjørt før salg.')
 
 @section('content')
 <x-hero
     badge="Fauske · Salten"
-    :show-service-action="true"
-    description="Trenger du sykkelservice eller er på utkikk etter en god brukt sykkel i Fauske? Han Sykkeltypen pusser opp og selger solide bruktsykler, og utfører vedlikehold som gjør sykkelen din klar for veien igjen."
+    description="Er du på utkikk etter en god brukt sykkel i Fauske? Han Sykkeltypen pusser opp og selger solide bruktsykler for hverdag, skole, jobb og fritid."
 >
-    Sykkelservice og brukte sykler i <span class="text-sun">Fauske</span>
+    Solide bruktsykler i <span class="text-sun">Fauske</span>
 </x-hero>
 
 <section class="grain bg-paper px-5 py-20 lg:px-8">
     <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-2">
         <div>
-            <p class="eyebrow">Sykkelservice i Fauske</p>
-            <h2>Vi henter sykkelen din i Fauske</h2>
-            <p class="lead">Det skal være enkelt å gi sykkelen den omsorgen den trenger. Bor du i Fauske, kan vi avtale henting og levering av sykkelen din for service.</p>
-            <p class="mt-4">Han Sykkeltypen er ofte i Fauske-området og kan hente sykkelen din hjemme hos deg, utføre service, og levere den tilbake når den er klar.</p>
+            <p class="eyebrow">Bruktsykler i Fauske</p>
+            <h2>En brukt sykkel du kan stole på i Fauske</h2>
+            <p class="lead">Han Sykkeltypen leverer solide og gjennomgåtte bruktsykler til kunder i Fauske og omegn.</p>
+            <p class="mt-4">Hver sykkel blir kontrollert, rengjort, justert og prøvekjørt slik at den er klar for veien fra første dag.</p>
         </div>
         <ul class="grid gap-4 sm:grid-cols-2">
             @foreach(['Gir og bremser','Kjede, tannhjul og drivverk','Dekk, slanger og hjul','Lager og krank','Smøring og justering','Slitedeler ved behov','Grundig rengjøring','Prøvetur og sikkerhetskontroll'] as $item)
@@ -32,8 +31,8 @@
     <div class="mx-auto grid max-w-5xl gap-10 lg:grid-cols-2">
         <div>
             <p class="eyebrow">Ta kontakt</p>
-            <h2>Trenger du hjelp med sykkelen din i Fauske?</h2>
-            <p class="lead">Send en melding om du ser etter en ny sykkel, eller trenger service på den du har.</p>
+            <h2>Ser du etter sykkel i Fauske?</h2>
+            <p class="lead">Send en melding om du ser etter en sykkel, eller har noe annet på hjertet.</p>
         </div>
         <x-contact-form />
     </div>

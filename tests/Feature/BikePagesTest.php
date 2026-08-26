@@ -18,7 +18,7 @@ class BikePagesTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertSee('Solide bruktsykler')
-            ->assertSee(route('service.create'))
+            ->assertDontSee(route('service.create'))
             ->assertDontSee('Se sykler til salgs')
             ->assertDontSee(route('bikes.index'));
     }

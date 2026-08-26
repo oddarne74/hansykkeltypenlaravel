@@ -60,6 +60,22 @@ class WebStatsTest extends TestCase
             ->assertSee('Test Page Title');
     }
 
+    public function test_web_stats_page_is_sorted_by_todays_views_descending(): void
+    {
+        $user = User::factory()->create();
+
+        $stat1 = WebStat::create(['url' => 'https://hansykkeltypen.cc/page-1', 'title' => 'Page 1']);
+        $stat2 = WebStat::create(['url' => 'https://hansykkeltypen.cc/page-2', 'title' => 'Page 2']);
+
+        WebStatHit::create(['web_stat_id' => $stat1->id, 'created_at' => now()]);
+        WebStatHit::create(['web_stat_id' => $stat2->id, 'created_at' => now()]);
+        WebStatHit::create(['web_stat_id' => $stat2->id, 'created_at' => now()]);
+
+        Livewire::actingAs($user)
+            ->test(ListWebStats::class)
+            ->assertCanSeeTableRecords([$stat2, $stat1], inOrder: true);
+    }
+
     public function test_bot_requests_are_not_tracked_in_web_stats(): void
     {
         $this->withHeader('User-Agent', 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)')
